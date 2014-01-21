@@ -21,14 +21,16 @@ Put your running instructions here.  Although not required, it would be great if
 
 Put your storyboard content or a link to your storyboard pdf file here.  (You can upload storyboard.pdf to your root folder.)
 
-## Changes between Storyboard and the Final Implementation
+### Changes between Storyboard and the Final Implementation
 
 A paragraph explaining changes between the storyboard and the final implementation.
 
-## Distribution of Work among the group members
+## Development Process
 
-Breakdown of how the work was split among the group members. 
-Include a commentary on the development process, including answers to the following questions: 
-Roughly how much time did you spend developing your application? What aspects took the most time?
+Include:
+- Breakdown of how the work was split among the group members. 
+- a commentary on the development process, including answers to the following questions: 
+  - Roughly how much time did you spend developing your application?
+  - What aspects took the most time?
 
  
