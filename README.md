@@ -3,8 +3,8 @@ a3-jheer-kanitw
 
 ## Team Members
 
-Jeffrer Heer jheer@uw.edu
-Kanit Wongsuphasawat kanitw@uw.edu
+1. Jeffrer Heer jheer@uw.edu
+2. Kanit Wongsuphasawat kanitw@uw.edu
 
 ## Description
 
@@ -20,7 +20,6 @@ Put your running instructions here.  Although not required, it would be great if
 ## Story Board
 
 Put your storyboard content or a link to your storyboard pdf file here.  (You can upload storyboard.pdf to your root folder.)
-
 
 ## Changes between Storyboard and the Final Implementation
 
