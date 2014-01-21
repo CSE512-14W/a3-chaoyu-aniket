@@ -6,7 +6,7 @@ a3-jheer-kanitw
 1. Jeffrer Heer jheer@uw.edu
 2. Kanit Wongsuphasawat kanitw@uw.edu
 
-## Description
+## Project Name
 
 This is an example repository for assignment 3 submission. 
 (Put your a brief description of your final interactive visualization application and your dataset here.)
