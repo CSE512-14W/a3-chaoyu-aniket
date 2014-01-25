@@ -23,7 +23,7 @@ Access our visualization at http://cse512-14w.github.io/a3-jheer-kanitw/
 
 ## Story Board
 
-Put either your storyboard content or a [link](storyboard.pdf)  to your storyboard pdf file here.  (You can upload storyboard.pdf to your root folder.)  Just like A2, you can use any software to create a *reasonable* pdf storyboard. 
+Put either your storyboard content or a [link](storyboard.pdf?raw=true)  to your storyboard pdf file here.  (You can upload storyboard.pdf to your root folder.)  Just like A2, you can use any software to create a *reasonable* pdf storyboard. 
 
 
 ### Changes between Storyboard and the Final Implementation
