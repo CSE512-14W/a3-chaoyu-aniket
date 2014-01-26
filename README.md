@@ -16,9 +16,9 @@ This is an example repository for assignment 3 submission.
 
 Put your running instructions here.  (Tell us how to open your visualization.) 
 
-If your visualization is web-based,  it would be great if your submissions can be opened online. [Github Pages](http://pages.github.com/) and Mike Bostock's [Bl.ocks.org](http://bl.ocks.org) are good and easy way to put your visualization online so you can put your link here.  For example:
+If your visualization is web-based,  it would be great if your submissions can be opened online. [Github Pages](http://pages.github.com/) is a good and easy way to put your visualization online so you can put your link here.  For example:
 
-Access our visualization at http://cse512-14w.github.io/a3-jheer-kanitw/
+Access our visualization at http://cse512-14w.github.io/a3-jheer-kanitw/ or download this repository and run `python -m SimpleHTTPServer 9000` and access this from http://localhost:9000/.
 
 
 ## Story Board
