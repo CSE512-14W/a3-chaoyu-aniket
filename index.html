@@ -6,6 +6,7 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/ui-lightness/jquery-ui.min.css">
     <link href="_include/css/main.css" rel="stylesheet">
 
     <title>Assignment 3</title>
@@ -14,7 +15,7 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
-      
+    <script src="_include/js/datamaps.world.min.js"></script>`
       <div class="container">
         <div class="alert alert-warning">
           <div class="alert-link">A pretty Visualization coming up!</div>
@@ -23,12 +24,44 @@
           <h1>Viz.<small>...</small></h1>
         </div>
       </div>
-    <footer>
+    
+	<div class="container">
+	<div id="map" style="position: relative; width: 1000px; height: 600px;"></div>
+		<script>
+			var map = new Datamap({
+			element: document.getElementById('map'),
+			fills: {
+				LOW: 'rgb(0,0,255)',
+				defaultFill: 'rgb(255,255,0)'
+			},
+			data: {
+				IRL: {
+					fillKey: 'LOW',
+					numberOfThings: 2002
+				},
+				USA: {
+					fillKey: 'MEDIUM',
+					numberOfThings: 10381
+				}
+			}
+			});
+			//map.legend();
+		</script>
+	<input type="text" id="from-year" style="border:0 ">
+	<input type="text" id="to-year" style="border:0">
+	<div id="slider" style=""></div>
+	
+	</div>
+	
+	<footer>
       <div class="container">
+	  <br/>
         <p><a href="http://cyy.io">Chaoyu</a> + <a href="http://atneik.com">Atneik</a></p>
       </div>
     </footer>
-    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script src="_include/js/main.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
   </body>
 </html>
