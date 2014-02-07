@@ -27,29 +27,9 @@
     </div>
 
 	<div class="container">
-    <div id="map" style="position: relative; width: 1000px; height: 600px;"></div>
-      <script>
-        var map = new Datamap({
-        element: document.getElementById('map'),
-        fills: {
-          LOW: 'rgb(0,0,255)',
-          defaultFill: 'rgb(255,255,0)'
-        },
-        data: {
-          IRL: {
-            fillKey: 'LOW',
-            numberOfThings: 2002
-          },
-          USA: {
-            fillKey: 'MEDIUM',
-            numberOfThings: 10381
-          }
-        }
-        });
-        //map.legend();
-      </script>
-    <input type="text" id="from-year" style="border:0 ">
-    <input type="text" id="to-year" style="border:0">
+    	<div id="map" style="position: relative; width: 1000px; height: 600px;"></div>
+    	<input type="text" id="from-year" style="border:0 ">
+    	<input type="text" id="to-year" style="border:0">
     <div id="slider" style=""></div>
   </div>
 
