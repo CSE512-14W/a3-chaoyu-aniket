@@ -16,7 +16,7 @@ def generate_country_code_map
   return ccode_map
 end
 
-if $0 == __FILE__
+def generate_info_hash
   country_code_map = generate_country_code_map
   countries = {}
 
@@ -67,8 +67,46 @@ if $0 == __FILE__
     puts "#{key}\t#{countries[key]}"
   end
 
-  # print the object into a json document
-  json_file = File.open("gtd.json","w+")
-  json_file << data_obj.to_json
+  puts data_obj.length
+  return data_obj
+end
+
+def fprint_in_json data_hash, filename
+  json_file = File.open(filename,"w+")
+  json_file << data_hash.to_json
   json_file.close
 end
+
+def generate_sum_of_kill_by_month
+  # get all the data form file
+  data_obj = generate_info_hash
+  
+  # Create & initialize the data table
+  sum_of_nkill_table = {}
+  (2000..2010).map{|x| sum_of_nkill_table[x] = Array.new(12, 0)}
+
+  puts sum_of_nkill_table
+
+  # fill the table
+  data_obj.each do |event|
+    year  = event[:year].to_i
+    month = event[:month].to_i
+    nkill = event[:nkill].to_i
+    puts "#{year}:#{month}:#{nkill}"
+
+    sum_of_nkill_table[year][month - 1] += nkill
+  end
+
+  return sum_of_nkill_table
+end
+
+if $0 == __FILE__
+  # print the gtd.json
+  data_obj = generate_info_hash
+  fprint_in_json data_obj, "gtd.json"
+
+  # print the sum_table.json
+  #fprint_in_json generate_sum_of_kill_by_month, "sum_table.json"
+
+end
+
