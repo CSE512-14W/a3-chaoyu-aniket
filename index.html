@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Assignment 3</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/ui-lightness/jquery-ui.min.css">
     <link href="_include/css/main.css" rel="stylesheet">
 
-    <title>Assignment 3</title>
-  </head>
-  <body>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
-      
-      <div class="container">
-        <div class="alert alert-warning">
-          <div class="alert-link">A pretty Visualization coming up!</div>
-        </div>
-        <div class="page-header">
-          <h1>Viz.<small>...</small></h1>
-        </div>
+    <script src="_include/js/datamaps.world.min.js"></script>
+  </head>
+
+  <body>
+	<div class="container">
+      <div class="page-header">
+        <h1>Viz.<small>...</small></h1>
       </div>
+
+    	<div id="map" style="position: relative; width: 100%; height: 444px;"></div>
+      <div id="slider-bg"></div>
+      <div id="slider-container">
+        <div id="slider" style=""></div>
+      </div>
+      <input type="text" id="from-year" style="border:0 ">
+      <input type="text" id="to-year" style="border:0">
+    </div>
+
     <footer>
-      <div class="container">
-        <p><a href="http://cyy.io">Chaoyu</a> + <a href="http://atneik.com">Atneik</a></p>
-      </div>
+    <div class="container">
+      <p><a href="http://cyy.io">Chaoyu</a> + <a href="http://atneik.com">Atneik</a></p>
+    </div>
     </footer>
-    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="_include/js/main.js"></script>
+    <script src="_include/js/slider-bg.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
   </body>
 </html>
