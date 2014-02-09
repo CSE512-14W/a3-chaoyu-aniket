@@ -144,7 +144,7 @@ var slider = (function(){
       h = 130,
       barPadding = 1;
 
-  // Parsing data from sum_table.csv
+  // Parsing data from sumTable.csv
   // csv format example: 
   //    time, nkill
   //    2010-1, 10
@@ -277,7 +277,7 @@ var slider = (function(){
 
   var init = function() {
     // Read csv file
-    d3.csv("../../data/sum_table.csv", function(data){
+    d3.csv("../../data/sumTable.csv", function(data){
       dataset = data.map(function(d) {
         return {
           time: format.parse(d.time), 
