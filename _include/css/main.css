@@ -1,3 +1,24 @@
+#slider-bg {
+  width: 100%;
+}
+
+#slider {
+}
+
+#slider-container {
+  padding: -50px, 20px, 20px, 0;
+}
+
+.axis text {
+  font: 15px sans-serif;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdge;
+}
+
 footer .container {
   margin: 20px auto 20px auto;
   width: 200px;

@@ -85,14 +85,14 @@ def generate_sum_of_kill_by_month
   sum_of_nkill_table = {}
   (2000..2010).map{|x| sum_of_nkill_table[x] = Array.new(12, 0)}
 
-  puts sum_of_nkill_table
+  #puts sum_of_nkill_table
 
   # fill the table
   data_obj.each do |event|
     year  = event[:year].to_i
     month = event[:month].to_i
     nkill = event[:nkill].to_i
-    puts "#{year}:#{month}:#{nkill}"
+    #puts "#{year}:#{month}:#{nkill}"
 
     sum_of_nkill_table[year][month - 1] += nkill
   end
@@ -102,11 +102,16 @@ end
 
 if $0 == __FILE__
   # print the gtd.json
-  data_obj = generate_info_hash
-  fprint_in_json data_obj, "gtd.json"
+  #data_obj = generate_info_hash
+  #fprint_in_json data_obj, "gtd.json"
 
-  # print the sum_table.json
-  #fprint_in_json generate_sum_of_kill_by_month, "sum_table.json"
+  # print the sum_table
+  sum_of_nkill_table = generate_sum_of_kill_by_month
+  sum_of_nkill_table.keys.each do |year|
+    sum_of_nkill_table[year].to_enum.with_index(1).each do |nkill, month|
+      puts "#{year}-#{month},#{nkill}"
+    end
+  end
 
 end
 
