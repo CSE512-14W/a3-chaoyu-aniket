@@ -1,3 +1,14 @@
+#totalKill {
+  font: 26px 'Titillium Web', arial, sans-serif;
+  background: #f6f6f6;
+  color: #5E545D;
+  text-align: center;
+}
+
+#totalKill b {
+  font-size: 30px;
+}
+
 #slider-bg {
   width: 100%;
 }
@@ -20,7 +31,7 @@
 }
 
 div#country_list{
-	background-color: yellow;
+  background-color: yellow;
 }
 
 .grid-background {

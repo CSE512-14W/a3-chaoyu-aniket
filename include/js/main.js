@@ -1,4 +1,3 @@
-//
 (function() {
 	var countries=[];
 	nevents = 0;
@@ -35,50 +34,49 @@ var WORLDMAP = {
   
   update: function (f_year, f_month, t_year, t_month) {
 
-  f_year = typeof f_year !== 'undefined' ? f_year : 2000;
-  f_month = typeof f_month !== 'undefined' ? f_month : 1;
-  t_year = typeof t_year !== 'undefined' ? t_year : 2011;
-  t_month = typeof t_month !== 'undefined' ? t_month : 1;
+    f_year = typeof f_year !== 'undefined' ? f_year : 2000;
+    f_month = typeof f_month !== 'undefined' ? f_month : 1;
+    t_year = typeof t_year !== 'undefined' ? t_year : 2011;
+    t_month = typeof t_month !== 'undefined' ? t_month : 1;
 
-  var world_data = {};
-  var totalKilled = 0;
-  //console.log(data);
+    var world_data = {};
+    var totalKilled = 0;
+    //console.log(data);
 
-  	for(var i=0; i < data.length; i++){
-  	  
-  	  var bool = new Boolean();
-  	  bool = true;
+    for(var i=0; i < data.length; i++){
+      
+      var bool = new Boolean();
+      bool = true;
       
       if(parseInt(data[i].year) < f_year){
-      		bool = false;
+          bool = false;
       }
       else if(parseInt(data[i].year) == f_year){
-	  		if(parseInt(data[i].month) < f_month)
-	  			bool = false;
-      }
+        if(parseInt(data[i].month) < f_month)
+          bool = false;
+      };
       
       if(parseInt(data[i].year) > t_year){
-	      bool = false;
+        bool = false;
       }else if(parseInt(data[i].year) == t_year){
-	  		if(parseInt(data[i].month) > t_month)
-	  			bool = false;
-      } 
+        if(parseInt(data[i].month) > t_month)
+          bool = false;
+      } ;
      
-      
       if(bool){
       totalKilled += parseInt(data[i].nkill);
-      	if(world_data[data[i].country]==null){
+        if(world_data[data[i].country]==null){
             world_data[data[i].country] = parseInt(data[i].nkill)
           }
           else{
             world_data[data[i].country] = parseInt(data[i].nkill) + world_data[data[i].country];
-          }	
-      }
-    }
+          };	
+      };
+    };
    
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    var html = totalKilled + ' people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month
+    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + 'worldwide.'
     console.log(html);
     document.getElementById('totalKill').innerHTML = html;
     //console.log(world_data);
@@ -120,16 +118,13 @@ var WORLDMAP = {
 	      }
       }
     });
+  }, // end of update function
 
-
-  
-  
-  
-  },
-  init: function () {
+  init: function (callback) {
 	  d3.json("data/gtd.json", function(error, data) {
 	    if (error) return console.warn(error);
 	    this.data = data;
+      callback();
 	    }); 
   }
 }
@@ -199,7 +194,7 @@ var slider = (function(){
 
     var brush = d3.svg.brush()
         .x(tScale)
-        .extent([new Date(2000, 0), new Date(2011, 0)])
+        .extent([new Date(2007, 1), new Date(2008, 1)])
         .on("brushend", function() {
           if (!d3.event.sourceEvent) return; // only transition after input
           var extent0 = brush.extent(),
@@ -215,10 +210,22 @@ var slider = (function(){
           .call(brush.extent(extent1))
           .call(brush.event);
 
-          update_view(extent1);
+          //update_view(extent1);
             
           //d3.select(this).call(brush.extent(extent1));
-        });
+        })
+        .on("brush", function(){
+          var extent0 = brush.extent(),
+          extent1 = extent0.map(d3.time.month.round);
+
+           if (extent1[0] >= extent1[1]) {
+            extent1[0] = d3.time.month.floor(extent0[0]);
+            extent1[1] = d3.time.month.ceil(extent0[1]);
+          }
+
+          update_view(extent1);
+        })
+        ;
 
        
     // Draw the Chart
@@ -294,5 +301,4 @@ var slider = (function(){
   };
 })();
 
-WORLDMAP.init();
-slider.init();
+WORLDMAP.init(slider.init);
