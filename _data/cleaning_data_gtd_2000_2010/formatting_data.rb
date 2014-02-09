@@ -83,7 +83,7 @@ def generate_sum_of_kill_by_month
   
   # Create & initialize the data table
   sum_of_nkill_table = {}
-  (2000..2010).map{|x| sum_of_nkill_table[x] = Array.new(12, 0)}
+  (2000..2009).map{|x| sum_of_nkill_table[x] = Array.new(12, 0)}
 
   #puts sum_of_nkill_table
 
