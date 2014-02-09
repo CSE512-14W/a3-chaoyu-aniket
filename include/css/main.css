@@ -1,3 +1,8 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #totalKill {
   font: 26px 'Titillium Web', arial, sans-serif;
   background: #f6f6f6;
