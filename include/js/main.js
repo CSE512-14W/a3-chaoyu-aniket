@@ -11,7 +11,6 @@ var WORLDMAP = {
     t_year = typeof t_year !== 'undefined' ? t_year : 2011;
     t_month = typeof t_month !== 'undefined' ? t_month : 1;
 
-    //var world_data = {};
     var totalKilled = 0;
     //console.log(data);
 
@@ -214,8 +213,6 @@ var slider = (function(){
           .call(brush.extent(extent1))
           .call(brush.event);
 
-          //update_view(extent1);
-            
           //d3.select(this).call(brush.extent(extent1));
         })
         .on("brush", function(){
