@@ -184,6 +184,9 @@ var slider = (function(){
           d3.select(this).transition()
           .call(brush.extent(extent1))
           .call(brush.event);
+
+          update_view(extent1);
+            
           //d3.select(this).call(brush.extent(extent1));
         });
 
@@ -233,6 +236,14 @@ var slider = (function(){
     gBrush.selectAll("rect")
       .attr("height", h);
   };
+
+  var update_view = function(month_range) {
+    //console.log(month_range);
+    generateWorld_data([
+      month_range[0].getFullYear(), month_range[0].getMonth(),
+      month_range[1].getFullYear(), month_range[1].getMonth()
+    ]);
+  }
 
   var init = function() {
     // Read csv file
