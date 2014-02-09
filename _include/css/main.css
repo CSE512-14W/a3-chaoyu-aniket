@@ -19,6 +19,27 @@
   shape-rendering: crispEdge;
 }
 
+.grid-background {
+  fill: #ddd;
+}
+
+.grid line,
+.grid path {
+  fill: none;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+.grid .minor.tick line {
+  stroke-opacity: .5;
+}
+
+.brush .extent {
+  stroke: #000;
+  fill-opacity: .25;
+  shape-rendering: crispEdges;
+}
+
 footer .container {
   margin: 20px auto 20px auto;
   width: 200px;

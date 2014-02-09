@@ -64,12 +64,12 @@ var generateWorld_data = function (f_year, f_month, t_year, t_month) {
 
 };
 
-// Backgroud of slider area
 
-var slider_bg = (function(){
+// Slider area
+var slider = (function(){
   // svg attributes
   var margin = {top:0, right:20, bottom: 30, left: 20},
-      canvas_width = +(d3.select('#slider-bg').style('width').replace('px', '')),
+      canvas_width = +(d3.select('#slider').style('width').replace('px', '')),
       w = canvas_width - margin.left - margin.right,
       h = 130,
       barPadding = 1;
@@ -84,23 +84,30 @@ var slider_bg = (function(){
   // doc: https://github.com/mbostock/d3/wiki/Time-Formatting
   var format = d3.time.format("%Y-%m");
   
-
   var dataset = []
   var draw = function(dataset) {
     // append svg
     console.log("create svg");
-    var svg = d3.select("#slider-bg")
+    var svg = d3.select("#slider")
                 .append("svg")
                 .attr("width", w + margin.left + margin.right)
                 .attr("height", h + margin.top + margin.bottom)
-              .append("g")
+                .append("g")
                 .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
+                //svg.append("rect")
+                //.attr("width", w)
+                //.attr("height", h)
+                //.attr("class", "grid-background")
+                //.append("g")
+                //.attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+              
+                
     // setting up scale
     var nkill_range = [d3.min(dataset, function(d) { return d.nkill; }),
                         d3.max(dataset, function(d) { return d.nkill; })]
-    var time_range = [d3.min(dataset, function(d) { return d.time }),
-                        d3.max(dataset, function(d) { return d.time })]
+    var time_range = [d3.min(dataset, function(d) { return d.time; }),
+                        d3.max(dataset, function(d) { return d.time; })]
     // y-axis scale
     var yScale = d3.scale.linear()
                          .domain(nkill_range)
@@ -116,8 +123,42 @@ var slider_bg = (function(){
     var tScale = d3.time.scale()
                         .domain(time_range)
                         .nice(d3.time.year)
-                        .range([0,w]);
-    
+                        .range([0,w])
+                        //.ticks(d3.time.month, 1)
+                        //.tickFormat(d3.time.format('%Y-%B'))
+
+    var brush = d3.svg.brush()
+        .x(tScale)
+        .extent([new Date(2001, 1), new Date(2002, 1)])
+        .on("brush", function() {
+          var extent0 = brush.extent(),
+          extent1;
+
+          console.log(extent0[0]);
+          console.log(extent0[1]);
+
+          // if dragging, preserve the width of the extent
+          if (d3.event.mode === "move") {
+            var d0 = d3.time.month.round(extent0[0]),
+            d1 = d3.time.month.offset(d0, Math.round((extent0[1] - extent0[0])/(864e5*30) ));
+            extent1 = [d0, d1];
+          }
+
+          // otherwise, if resizing, round both dates
+          else {
+            extent1 = extent0.map(d3.time.month.round);
+
+            // if empty when rounded, use floor & ceil instead
+            if (extent1[0] >= extent1[1]) {
+              extent1[0] = d3.time.month.floor(extent0[0]);
+              extent1[1] = d3.time.month.ceil(extent0[1]);
+            }
+          }
+
+          d3.select(this).call(brush.extent(extent1));
+        });
+
+
     // Draw the Chart
     svg.selectAll("rect")
         .data(dataset)
@@ -125,24 +166,43 @@ var slider_bg = (function(){
         .append("rect")
         .attr({
           x: function(d, i) { return i* (w/dataset.length);},
-          y: function(d) { return h - yScale(d.nkill)},
+          y: function(d) { return h - yScale(d.nkill);},
           width: w / dataset.length - barPadding,
-          height: function(d) { return yScale(d.nkill) },
-          fill: function(d) { return "hsla(13, 100%, " + (95 -cScale(d.nkill)) + "%,1)"}
+          height: function(d) { return yScale(d.nkill); },
+          fill: function(d) { return "hsla(13, 100%, " + (95 -cScale(d.nkill)) + "%,1)";}
         });
       
-    // Draw Axis
+    
+    // Draw grid
+    svg.append("g")
+      .attr("class", "x grid")
+      .attr("transform", "translate(0," + h + ")")
+      .call(d3.svg.axis()
+            .scale(tScale)
+            .orient("bottom")
+            .ticks(d3.time.year, 1)
+            .tickFormat(""))
+          .selectAll(".tick")
+            .classed("minor", function(d) { return d.getFullYear(); });
+
     var xAxis = d3.svg.axis()
                     .scale(tScale)
                     .orient("bottom")
-                    //.ticks(d3.time.year, 1)
-                    //.tickFormat(d3.time.format('%Y'));
+                    .ticks(d3.time.year, 1)
+                    .tickFormat(d3.time.format('%Y'))
 
     svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (h+1) + ")")
       .call(xAxis);
 
+    var gBrush = svg.append("g")
+      .attr("class", "brush")
+      .call(brush)
+      .call(brush.event);
+
+    gBrush.selectAll("rect")
+      .attr("height", h);
   };
 
   var init = function() {
@@ -160,9 +220,9 @@ var slider_bg = (function(){
 
   return {
     init: init,
-    dataset: function() { return dataset;}
-  }
+    dataset: function() { return dataset; }
+  };
 })();
 
 generateWorld_data(2000,1,2010,12);
-slider_bg.init();
+slider.init();
