@@ -170,32 +170,21 @@ var slider = (function(){
     var brush = d3.svg.brush()
         .x(tScale)
         .extent([new Date(2001, 1), new Date(2002, 1)])
-        .on("brush", function() {
+        .on("brushend", function() {
+          if (!d3.event.sourceEvent) return; // only transition after input
           var extent0 = brush.extent(),
-          extent1;
+          extent1 = extent0.map(d3.time.month.round);
 
-          console.log(extent0[0]);
-          console.log(extent0[1]);
-
-          // if dragging, preserve the width of the extent
-          if (d3.event.mode === "move") {
-            var d0 = d3.time.month.round(extent0[0]),
-            d1 = d3.time.month.offset(d0, Math.round((extent0[1] - extent0[0])/(864e5*30) ));
-            extent1 = [d0, d1];
+          // if empty when rounded, use floor & ceil instead
+          if (extent1[0] >= extent1[1]) {
+            extent1[0] = d3.time.month.floor(extent0[0]);
+            extent1[1] = d3.time.month.ceil(extent0[1]);
           }
 
-          // otherwise, if resizing, round both dates
-          else {
-            extent1 = extent0.map(d3.time.month.round);
-
-            // if empty when rounded, use floor & ceil instead
-            if (extent1[0] >= extent1[1]) {
-              extent1[0] = d3.time.month.floor(extent0[0]);
-              extent1[1] = d3.time.month.ceil(extent0[1]);
-            }
-          }
-
-          d3.select(this).call(brush.extent(extent1));
+          d3.select(this).transition()
+          .call(brush.extent(extent1))
+          .call(brush.event);
+          //d3.select(this).call(brush.extent(extent1));
         });
 
 
