@@ -1,12 +1,17 @@
 body {
   margin: 0;
   padding: 0;
+  background: #f1f1f1;
+}
+
+.container {
   background: #ddd;
 }
 
 #totalKill {
+  padding: 23px 0 20px 0;
   font: 26px 'Titillium Web', arial, sans-serif;
-  background: #f6f6f6;
+  background: #fafafa;
   color: #5E545D;
   text-align: center;
 }
@@ -15,11 +20,8 @@ body {
   font-size: 30px;
 }
 
-#slider-bg {
-  width: 100%;
-}
-
 #slider {
+  width: 100%;
 }
 
 .axis text {
@@ -61,7 +63,7 @@ div#country_list{
   shape-rendering: crispEdges;
 }
 
-footer .container {
+footer {
   margin: 20px auto 20px auto;
   width: 200px;
 }

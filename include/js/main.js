@@ -47,7 +47,7 @@ var WORLDMAP = {
    
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + ' worldwide.'
+    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + '.'
     console.log(html);
     document.getElementById('totalKill').innerHTML = html;
     //console.log(this.world_data);
@@ -139,7 +139,7 @@ var slider = (function(){
   var margin = {top:0, right:20, bottom: 30, left: 20},
       canvas_width = +(d3.select('#slider').style('width').replace('px', '')),
       w = canvas_width - margin.left - margin.right,
-      h = 130,
+      h = 70,
       barPadding = 1;
 
   // Parsing data from sumTable.csv
