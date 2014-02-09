@@ -9,7 +9,11 @@
   font: 15px sans-serif;
 }
 
-.axis path, .axis line {
+.axis path {
+  display: none;
+} 
+
+.axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdge;

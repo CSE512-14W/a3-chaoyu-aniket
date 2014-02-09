@@ -162,9 +162,7 @@ var slider_bg = (function(){
     init: init,
     dataset: function() { return dataset;}
   }
-
 })();
 
 generateWorld_data(2000,1,2010,12);
-
 slider_bg.init();
