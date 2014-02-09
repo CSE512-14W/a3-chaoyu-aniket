@@ -1,3 +1,34 @@
+//
+(function() {
+	var countries=[];
+	nevents = 0;
+	
+	svg = d3.select("div#map");	
+	svg.on("click", function() {
+    	var event;
+    	event = d3.mouse(this);
+    	total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
+    	var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
+    	
+    	if(countries.indexOf(clickedCountry)==-1){
+	    	countries.push(clickedCountry);
+    	}else
+    	{
+	    	countries.splice(countries.indexOf(clickedCountry),1);
+    	}
+    	var html ='';
+    	
+    	for(var country in countries){
+    		html += '<p>' + countries[country] + '</p>';
+    	}
+    	console.log(html);
+    	document.getElementById('country_list').innerHTML = html;
+    	
+    });
+  
+}).call(this);
+
+//
 var generateWorld_data = function (f_year, f_month, t_year, t_month) {
 
   f_year = typeof f_year !== 'undefined' ? f_year : 2000;
@@ -22,7 +53,7 @@ var generateWorld_data = function (f_year, f_month, t_year, t_month) {
       }
     });
 
-    console.log(world_data);
+    //console.log(world_data);
 
     for (var country in world_data) {
 
@@ -32,31 +63,40 @@ var generateWorld_data = function (f_year, f_month, t_year, t_month) {
           obj['fillKey'] = 'HIGH';
 
         }
-        else if (world_data[country]>500)
+        else if (world_data[country]>300)
           {
             obj['fillKey'] = 'MED';	
           }
-          else
+          else if (world_data[country]>30)
             {
               obj['fillKey'] = 'LOW';
             }
             obj['nkill'] = world_data[country];
             world_data[country] = obj;
 
-
     }
 
-    //console.log(world_data);
+    console.log(world_data);
 
     var map = new Datamap({
       element: document.getElementById('map'),
       fills: {
         HIGH: 'rgb(200,0,0)',
-        MED: 'rgb(200,100,100)',
-        LOW: 'rgb(200,200,200)',
-        defaultFill: 'rgb(200,200,200'
+        MED: 'rgb(180,75,75)',
+        LOW: 'rgb(200,150,150)',
+        defaultFill: 'rgb(200,200,200)'
       },
-      data: world_data
+      data: world_data,
+      geographyConfig:{
+	      highlightBorderColor: '#AAAAAA',
+	      highlightFillColor: '#000000',
+	      popupTemplate: function(geography, data) {
+	      if(data)
+	      	return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' poeple killed</div>'; 
+	      else
+	      	return '<div class="hoverinfo">' + geography.properties.name + '<br>nobody killed</div>'; 
+	      }
+      }
     });
 
 

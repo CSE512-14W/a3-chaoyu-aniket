@@ -19,6 +19,10 @@
   shape-rendering: crispEdge;
 }
 
+div#country_list{
+	background-color: yellow;
+}
+
 .grid-background {
   fill: #ddd;
 }
