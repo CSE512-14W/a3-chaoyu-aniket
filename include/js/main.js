@@ -277,7 +277,7 @@ var slider = (function(){
 
   var init = function() {
     // Read csv file
-    d3.csv("../../data/sumTable.csv", function(data){
+    d3.csv("data/sumTable.csv", function(data){
       dataset = data.map(function(d) {
         return {
           time: format.parse(d.time), 
