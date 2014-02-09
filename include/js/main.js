@@ -38,7 +38,7 @@ var generateWorld_data = function (f_year, f_month, t_year, t_month) {
 
   var world_data = {};
 
-  d3.json("_data/gtd.json", function(error, data) {
+  d3.json("data/gtd.json", function(error, data) {
     if (error) return console.warn(error);
 
     data.forEach(function(data){ 
@@ -236,7 +236,7 @@ var slider = (function(){
 
   var init = function() {
     // Read csv file
-    d3.csv("../../_data/sum_table.csv", function(data){
+    d3.csv("../../data/sum_table.csv", function(data){
       dataset = data.map(function(d) {
         return {
           time: format.parse(d.time), 
