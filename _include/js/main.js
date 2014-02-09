@@ -64,104 +64,107 @@ var generateWorld_data = function (f_year, f_month, t_year, t_month) {
 
 };
 
-generateWorld_data(2000,1,2010,12); 
+// Backgroud of slider area
 
-//generateWorld_data(2000,1,2005,1); 
+var slider_bg = (function(){
+  // svg attributes
+  var margin = {top:0, right:20, bottom: 30, left: 20},
+      canvas_width = +(d3.select('#slider-bg').style('width').replace('px', '')),
+      w = canvas_width - margin.left - margin.right,
+      h = 130,
+      barPadding = 1;
 
-//UI Range Slider
-(function( $, undefined ) {
-  $.widget("ui.dragslider", $.ui.slider, {
-    options: $.extend({},$.ui.slider.prototype.options,{rangeDrag:false}),
+  // Parsing data from sum_table.csv
+  // csv format example: 
+  //    time, nkill
+  //    2010-1, 10
 
-    _create: function() {
-      $.ui.slider.prototype._create.apply(this,arguments);
-      this._rangeCapture = false;
-    },
+  // Time format
+  // usage: format.parse("2010-1"), reuturns a Date object
+  // doc: https://github.com/mbostock/d3/wiki/Time-Formatting
+  var format = d3.time.format("%Y-%m");
+  
 
-    _mouseCapture: function( event ) { 
-      var o = this.options;
-      if ( o.disabled ) return false;
-      if(event.target == this.range.get(0) && o.rangeDrag == true && o.range == true) {
-        this._rangeCapture = true;
-        this._rangeStart = null;
-      }
-      else {
-        this._rangeCapture = false;
-      }
-      $.ui.slider.prototype._mouseCapture.apply(this,arguments);
-      if(this._rangeCapture == true) {	
-        this.handles.removeClass("ui-state-active").blur();	
-      }
-      return true;
-    },
+  var dataset = []
+  var draw = function(dataset) {
+    // append svg
+    console.log("create svg");
+    var svg = d3.select("#slider-bg")
+                .append("svg")
+                .attr("width", w + margin.left + margin.right)
+                .attr("height", h + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
-    _mouseStop: function( event ) {
-      this._rangeStart = null;
-      return $.ui.slider.prototype._mouseStop.apply(this,arguments);
-    },
+    // setting up scale
+    var nkill_range = [d3.min(dataset, function(d) { return d.nkill; }),
+                        d3.max(dataset, function(d) { return d.nkill; })]
+    var time_range = [d3.min(dataset, function(d) { return d.time }),
+                        d3.max(dataset, function(d) { return d.time })]
+    // y-axis scale
+    var yScale = d3.scale.linear()
+                         .domain(nkill_range)
+                         .range([0.05*h,h])
+                         .nice();
 
-    _slide: function( event, index, newVal ) {
-      if(!this._rangeCapture) { 
-        return $.ui.slider.prototype._slide.apply(this,arguments);
-      }
-      if(this._rangeStart == null) {
-        this._rangeStart = newVal;
-      }
-      var oldValLeft = this.options.values[0],
-      oldValRight = this.options.values[1],
-      slideDist = newVal - this._rangeStart,
-      newValueLeft = oldValLeft + slideDist,
-      newValueRight = oldValRight + slideDist,
-      allowed;
-      if ( this.options.values && this.options.values.length ) {
-        if(newValueRight > this._valueMax() && slideDist > 0) {
-          slideDist -= (newValueRight-this._valueMax());
-          newValueLeft = oldValLeft + slideDist;
-          newValueRight = oldValRight + slideDist;
+    // color scale
+    var cScale = d3.scale.log()
+                         .domain(nkill_range)
+                         .range([15, 75]);
+    
+    // time scale for x-axis
+    var tScale = d3.time.scale()
+                        .domain(time_range)
+                        .nice(d3.time.year)
+                        .range([0,w]);
+    
+    // Draw the Chart
+    svg.selectAll("rect")
+        .data(dataset)
+        .enter()
+        .append("rect")
+        .attr({
+          x: function(d, i) { return i* (w/dataset.length);},
+          y: function(d) { return h - yScale(d.nkill)},
+          width: w / dataset.length - barPadding,
+          height: function(d) { return yScale(d.nkill) },
+          fill: function(d) { return "hsla(13, 100%, " + (95 -cScale(d.nkill)) + "%,1)"}
+        });
+      
+    // Draw Axis
+    var xAxis = d3.svg.axis()
+                    .scale(tScale)
+                    .orient("bottom")
+                    //.ticks(d3.time.year, 1)
+                    //.tickFormat(d3.time.format('%Y'));
+
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + (h+1) + ")")
+      .call(xAxis);
+
+  };
+
+  var init = function() {
+    // Read csv file
+    d3.csv("../../_data/sum_table.csv", function(data){
+      dataset = data.map(function(d) {
+        return {
+          time: format.parse(d.time), 
+          nkill: +d.nkill
         }
-        if(newValueLeft < this._valueMin()) {
-          slideDist += (this._valueMin()-newValueLeft);
-          newValueLeft = oldValLeft + slideDist;
-          newValueRight = oldValRight + slideDist;
-        }
-        if ( slideDist != 0 ) {
-          newValues = this.values();
-          newValues[ 0 ] = newValueLeft;
-          newValues[ 1 ] = newValueRight;
-          // A slide can be canceled by returning false from the slide callback
-          allowed = this._trigger( "slide", event, {
-            handle: this.handles[ index ],
-            value: slideDist,
-            values: newValues
-          } );
-          if ( allowed !== false ) {
-            this.values( 0, newValueLeft, true );
-            this.values( 1, newValueRight, true );
-          }
-          this._rangeStart = newVal;
-        }
-      }
-    },
-  });
-})(jQuery);
+      });
+      draw(dataset);
+    });
+  };
 
+  return {
+    init: init,
+    dataset: function() { return dataset;}
+  }
 
-$(function(){
-  var months=new Array("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC");
-  // Slider
-  $('#slider').dragslider({
-    animate: true,
-    range: true,
-    rangeDrag: true,
-    values: [0, 131],
-    min: 0,
-    max: 131,
-    step: 1,
-    slide: function (event, ui) {
-      $( "#from-year" ).val(months[ui.values[ 0 ]%12] + ', ' + Math.floor(2000+ui.values[ 0 ]/12));
-      $( "#to-year" ).val(months[ui.values[ 1 ]%12] + ', ' + Math.floor(2000+ui.values[ 1 ]/12));
-    }
-  });
-  $( "#from-year" ).val($( "#slider" ).slider( "values", 0 ));
-  $( "#to-year" ).val($( "#slider" ).slider( "values", 1 ));
-});
+})();
+
+generateWorld_data(2000,1,2010,12);
+
+slider_bg.init();
