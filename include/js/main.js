@@ -29,56 +29,78 @@
 }).call(this);
 
 //
-var generateWorld_data = function (f_year, f_month, t_year, t_month) {
+var WORLDMAP = {
+
+  data: {},
+  
+  update: function (f_year, f_month, t_year, t_month) {
 
   f_year = typeof f_year !== 'undefined' ? f_year : 2000;
   f_month = typeof f_month !== 'undefined' ? f_month : 1;
-  t_year = typeof t_year !== 'undefined' ? t_year : 2010;
-  t_month = typeof t_month !== 'undefined' ? t_month : 12;
+  t_year = typeof t_year !== 'undefined' ? t_year : 2011;
+  t_month = typeof t_month !== 'undefined' ? t_month : 1;
 
   var world_data = {};
+  var totalKilled = 0;
+  //console.log(data);
 
-  d3.json("data/gtd.json", function(error, data) {
-    if (error) return console.warn(error);
-
-    data.forEach(function(data){ 
-      if(data.year >=f_year && data.year <=t_year){
-        if(data.month >=f_month && data.month <=t_month)	
-          if(world_data[data.country]==null){
-            world_data[data.country] = parseInt(data.nkill)
+  	for(var i=0; i < data.length; i++){
+  	  
+  	  var bool = new Boolean();
+  	  bool = true;
+      
+      if(parseInt(data[i].year) < f_year){
+      		bool = false;
+      }
+      else if(parseInt(data[i].year) == f_year){
+	  		if(parseInt(data[i].month) < f_month)
+	  			bool = false;
+      }
+      
+      if(parseInt(data[i].year) > t_year){
+	      bool = false;
+      }else if(parseInt(data[i].year) == t_year){
+	  		if(parseInt(data[i].month) > t_month)
+	  			bool = false;
+      } 
+     
+      
+      if(bool){
+      totalKilled += parseInt(data[i].nkill);
+      	if(world_data[data[i].country]==null){
+            world_data[data[i].country] = parseInt(data[i].nkill)
           }
           else{
-            world_data[data.country] = parseInt(data.nkill) + world_data[data.country];
-          }
+            world_data[data[i].country] = parseInt(data[i].nkill) + world_data[data[i].country];
+          }	
       }
-    });
+    }
+   
+    totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+    var html = totalKilled + ' people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month
+    console.log(html);
+    document.getElementById('totalKill').innerHTML = html;
     //console.log(world_data);
 
-    for (var country in world_data) {
 
+    for (var country in world_data) {
       var obj = {}
       if(world_data[country]>3000)
-        {
           obj['fillKey'] = 'HIGH';
-
-        }
         else if (world_data[country]>300)
-          {
             obj['fillKey'] = 'MED';	
-          }
           else if (world_data[country]>30)
-            {
               obj['fillKey'] = 'LOW';
-            }
-            obj['nkill'] = world_data[country];
-            world_data[country] = obj;
+      obj['nkill'] = world_data[country];
+      world_data[country] = obj;
 
     }
 
     console.log(world_data);
-
-    var map = new Datamap({
+    $("#map svg").remove();
+    
+    var currentMap = new Datamap({
       element: document.getElementById('map'),
       fills: {
         HIGH: 'rgb(200,0,0)',
@@ -92,7 +114,7 @@ var generateWorld_data = function (f_year, f_month, t_year, t_month) {
 	      highlightFillColor: '#000000',
 	      popupTemplate: function(geography, data) {
 	      if(data)
-	      	return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' poeple killed</div>'; 
+	      	return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
 	      else
 	      	return '<div class="hoverinfo">' + geography.properties.name + '<br>nobody killed</div>'; 
 	      }
@@ -100,9 +122,17 @@ var generateWorld_data = function (f_year, f_month, t_year, t_month) {
     });
 
 
-  });
-
-};
+  
+  
+  
+  },
+  init: function () {
+	  d3.json("data/gtd.json", function(error, data) {
+	    if (error) return console.warn(error);
+	    this.data = data;
+	    }); 
+  }
+}
 
 
 // Slider area
@@ -169,7 +199,7 @@ var slider = (function(){
 
     var brush = d3.svg.brush()
         .x(tScale)
-        .extent([new Date(2001, 1), new Date(2002, 1)])
+        .extent([new Date(2000, 0), new Date(2011, 0)])
         .on("brushend", function() {
           if (!d3.event.sourceEvent) return; // only transition after input
           var extent0 = brush.extent(),
@@ -190,7 +220,7 @@ var slider = (function(){
           //d3.select(this).call(brush.extent(extent1));
         });
 
-
+       
     // Draw the Chart
     svg.selectAll("rect")
         .data(dataset)
@@ -239,10 +269,10 @@ var slider = (function(){
 
   var update_view = function(month_range) {
     //console.log(month_range);
-    generateWorld_data([
-      month_range[0].getFullYear(), month_range[0].getMonth(),
-      month_range[1].getFullYear(), month_range[1].getMonth()
-    ]);
+    WORLDMAP.update(
+      month_range[0].getFullYear(), month_range[0].getMonth()+1,
+      month_range[1].getFullYear(), month_range[1].getMonth()+1
+    );
   }
 
   var init = function() {
@@ -264,5 +294,5 @@ var slider = (function(){
   };
 })();
 
-generateWorld_data(2000,1,2010,12);
+WORLDMAP.init();
 slider.init();
