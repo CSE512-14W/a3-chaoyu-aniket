@@ -1,45 +1,17 @@
-(function() {
-	var countries=[];
-	nevents = 0;
-	
-	svg = d3.select("div#map");	
-	svg.on("click", function() {
-    	var event;
-    	event = d3.mouse(this);
-    	total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
-    	var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
-    	
-    	if(countries.indexOf(clickedCountry)==-1){
-	    	countries.push(clickedCountry);
-    	}else
-    	{
-	    	countries.splice(countries.indexOf(clickedCountry),1);
-    	}
-    	var html ='';
-    	
-    	for(var country in countries){
-    		html += '<p>' + countries[country] + '</p>';
-    	}
-    	console.log(html);
-    	document.getElementById('country_list').innerHTML = html;
-    	
-    });
-  
-}).call(this);
-
-//
 var WORLDMAP = {
 
   data: {},
+  world_data: {},
   
   update: function (f_year, f_month, t_year, t_month) {
+    this.world_data = {};
 
     f_year = typeof f_year !== 'undefined' ? f_year : 2000;
     f_month = typeof f_month !== 'undefined' ? f_month : 1;
     t_year = typeof t_year !== 'undefined' ? t_year : 2011;
     t_month = typeof t_month !== 'undefined' ? t_month : 1;
 
-    var world_data = {};
+    //var world_data = {};
     var totalKilled = 0;
     //console.log(data);
 
@@ -61,72 +33,104 @@ var WORLDMAP = {
       }else if(parseInt(data[i].year) == t_year){
         if(parseInt(data[i].month) > t_month)
           bool = false;
-      } ;
+      };
      
       if(bool){
       totalKilled += parseInt(data[i].nkill);
-        if(world_data[data[i].country]==null){
-            world_data[data[i].country] = parseInt(data[i].nkill)
+        if(this.world_data[data[i].country]==null){
+            this.world_data[data[i].country] = parseInt(data[i].nkill)
           }
           else{
-            world_data[data[i].country] = parseInt(data[i].nkill) + world_data[data[i].country];
+            this.world_data[data[i].country] = parseInt(data[i].nkill) + this.world_data[data[i].country];
           };	
       };
     };
    
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + 'worldwide.'
+    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + ' worldwide.'
     console.log(html);
     document.getElementById('totalKill').innerHTML = html;
-    //console.log(world_data);
+    //console.log(this.world_data);
 
+    // create the color scale on the world map
+    var colorScale = d3.scale.log()
+                        .clamp(true)
+                        .domain([1, 3000])
+                        .range([0, 8])
+                        .nice();
 
-    for (var country in world_data) {
+    var mapColors = {};
+    for (var country in this.world_data) {
       var obj = {}
-      if(world_data[country]>3000)
-          obj['fillKey'] = 'HIGH';
-        else if (world_data[country]>300)
-            obj['fillKey'] = 'MED';	
-          else if (world_data[country]>30)
-              obj['fillKey'] = 'LOW';
-      obj['nkill'] = world_data[country];
-      world_data[country] = obj;
-
+      obj['fillKey'] = Math.ceil(colorScale(this.world_data[country]));
+      obj['nkill'] = this.world_data[country];
+      this.world_data[country] = obj;
     }
 
-    console.log(world_data);
+    console.log(this.world_data);
     $("#map svg").remove();
     
     var currentMap = new Datamap({
       element: document.getElementById('map'),
       fills: {
-        HIGH: 'rgb(200,0,0)',
-        MED: 'rgb(180,75,75)',
-        LOW: 'rgb(200,150,150)',
+        0: "rgb(255,245,240)",
+        1: "rgb(254,224,210)",
+        2: "rgb(252,187,161)",
+        3: "rgb(252,146,114)",
+        4: "rgb(251,106,74)",
+        5: "rgb(239,59,44)",
+        6: "rgb(203,24,29)",
+        7: "rgb(165,15,21)",
+        8: "rgb(103,0,13)",
         defaultFill: 'rgb(200,200,200)'
       },
-      data: world_data,
+      data: this.world_data,
       geographyConfig:{
 	      highlightBorderColor: '#AAAAAA',
 	      highlightFillColor: '#000000',
 	      popupTemplate: function(geography, data) {
-	      if(data)
-	      	return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
-	      else
-	      	return '<div class="hoverinfo">' + geography.properties.name + '<br>nobody killed</div>'; 
+          if(data)
+            return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
+          else
+            return '<div class="hoverinfo">' + geography.properties.name + '<br>nobody killed</div>'; 
 	      }
       }
     });
   }, // end of update function
 
   init: function (callback) {
+    var countries=[];
+    nevents = 0;
+    
+    svg = d3.select("div#map");	
+    svg.on("click", function() {
+        var event;
+        event = d3.mouse(this);
+        total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
+        var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
+        
+        if(countries.indexOf(clickedCountry)==-1){
+          countries.push(clickedCountry);
+        }else
+        {
+          countries.splice(countries.indexOf(clickedCountry),1);
+        }
+        var html ='';
+        
+        for(var country in countries){
+          html += '<p>' + countries[country] + '</p>';
+        }
+        console.log(html);
+        document.getElementById('country_list').innerHTML = html;
+      });
+
 	  d3.json("data/gtd.json", function(error, data) {
 	    if (error) return console.warn(error);
 	    this.data = data;
       callback();
 	    }); 
-  }
+  } // end of init function
 }
 
 
