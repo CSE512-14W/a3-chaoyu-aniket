@@ -412,20 +412,18 @@ var circlesmap = (function(){
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
       ;
 
-    var circles = new Array();
+    //var circles = new Array();
     for(var i=0; i<data.length; i++){
       // draw each counrty separately
-      var g = svg.append("g")
-
-      circles[i] = g.selectAll("circle")
-        .data(data[i])
+      //var g = svg.append("g")
+      //circles[i] = g.selectAll("circle")
+      svg.selectAll("circle")
+        .data(data[i].days)
         .enter()
-        .append("circle");
-
-      circles[i]
+        .append("circle")  
         .attr("cx", function(d, i) { return xScale(d.time) })
-        .attr("cy", function(d) { return (i + 0.5) * cell_height; })
-        .attr("r", function(d) { return radiusScale(d.nkill)})
+        .attr("cy", function(d, i) { return (i + 0.5) * cell_height; })
+        .attr("r", function(d) { return d.nkill})
         .style("stroke", 'black')
         .style("fill", 'black');
     }
