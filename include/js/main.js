@@ -69,7 +69,7 @@ var WORLDMAP = {
       this.world_data[country] = obj;
     }
 
-    console.log(this.world_data);
+    //console.log(this.world_data);
     $("#map svg").remove();
     
     var currentMap = new Datamap({
@@ -84,12 +84,14 @@ var WORLDMAP = {
         2: "#BE9393",
         1: "#C8ABAB",
         0: "#D2C4C4",
-        defaultFill: 'DDDDDD'
+        defaultFill: '#DDDDDD'
       },
       data: this.world_data,
       geographyConfig:{
-	      highlightBorderColor: '#AAAAAA',
-	      highlightFillColor: '#000000',
+      	  borderColor: 'hsl(0,0%,80%)',
+	      highlightBorderColor: 'hsl(0,0%,0%)',
+	      highlightFillColor: 'rgb(0,0,0)',
+	      highlightOnHover: false,
 	      popupTemplate: function(geography, data) {
           if(data)
             return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
@@ -198,6 +200,19 @@ var slider = (function(){
     var cScale = d3.scale.log()
                          .domain(nkill_range)
                          .range([15, 75]);
+                         
+ // color scale
+    var cScaleS = d3.scale.log()
+                         .domain(nkill_range)
+                         .range([0, 100]);
+ // color scale
+    var cScaleL = d3.scale.log()
+                         .domain(nkill_range)
+                         .range([87, 25]); 
+// color scale
+    var cScaleL1 = d3.scale.log()
+                         .domain(nkill_range)
+                         .range([80, 0]);                                                                        
     
     // time scale for x-axis
     var tScale = d3.time.scale()
@@ -251,7 +266,12 @@ var slider = (function(){
           y: function(d) { return h - yScale(d.nkill);},
           width: w / dataset.length - barPadding,
           height: function(d) { return yScale(d.nkill); },
-          fill: function(d) { return "hsla(13, 100%, " + (95 -cScale(d.nkill)) + "%,1)";}
+          fill: function(d) { 
+          	var color = "hsl(0, 0%,"+ cScaleL1(d.nkill) + "%)";
+          	//var color = "hsla(0, "+ cScaleS(d.nkill) + '%,'+ cScaleL(d.nkill) + "%,1)";
+          	console.log(color);
+          	return color;}
+          //fill: function(d) { return "hsla(13, 100%, " + (95 -cScale(d.nkill)) + "%,1)";}
         });
       
     
@@ -318,6 +338,5 @@ var slider = (function(){
     dataset: function() { return dataset; }
   };
 })();
-
 
 WORLDMAP.init(slider.init);
