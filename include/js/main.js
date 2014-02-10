@@ -74,16 +74,16 @@ var WORLDMAP = {
     var currentMap = new Datamap({
       element: document.getElementById('map'),
       fills: {
-        0: "rgb(255,245,240)",
-        1: "rgb(254,224,210)",
-        2: "rgb(252,187,161)",
-        3: "rgb(252,146,114)",
-        4: "rgb(251,106,74)",
-        5: "rgb(239,59,44)",
-        6: "rgb(203,24,29)",
-        7: "rgb(165,15,21)",
-        8: "rgb(103,0,13)",
-        defaultFill: 'rgb(200,200,200)'
+        0: "#800000",
+        1: "#8A1818",
+        2: "#943131",
+        3: "#9F4949",
+        4: "#A96262",
+        5: "#B37A7A",
+        6: "#BE9393",
+        7: "#C8ABAB",
+        8: "#D2C4C4",
+        defaultFill: 'DDDDDD'
       },
       data: this.world_data,
       geographyConfig:{
