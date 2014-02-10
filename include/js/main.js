@@ -36,19 +36,22 @@ var WORLDMAP = {
      
       if(bool){
       totalKilled += parseInt(data[i].nkill);
-        if(this.world_data[data[i].country]==null){
-            this.world_data[data[i].country] = parseInt(data[i].nkill)
-          }
-          else{
-            this.world_data[data[i].country] = parseInt(data[i].nkill) + this.world_data[data[i].country];
-          };	
+        if(this.world_data[data[i].country] == null){
+          this.world_data[data[i].country] = parseInt(data[i].nkill)
+        }
+        else{
+          this.world_data[data[i].country] = parseInt(data[i].nkill) + this.world_data[data[i].country];
+        };	
       };
     };
    
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + '.'
-    console.log(html);
+
+    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between '
+                  + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + '.'
+    //console.log(html);
+
     document.getElementById('totalKill').innerHTML = html;
     //console.log(this.world_data);
 
@@ -59,7 +62,6 @@ var WORLDMAP = {
                         .range([0, 8])
                         .nice();
 
-    var mapColors = {};
     for (var country in this.world_data) {
       var obj = {}
       obj['fillKey'] = Math.ceil(colorScale(this.world_data[country]));
@@ -82,7 +84,7 @@ var WORLDMAP = {
         6: "rgb(203,24,29)",
         7: "rgb(165,15,21)",
         8: "rgb(103,0,13)",
-        defaultFill: 'rgb(200,200,200)'
+        defaultFill: 'rgb(221,221,221)'
       },
       data: this.world_data,
       geographyConfig:{
@@ -98,40 +100,50 @@ var WORLDMAP = {
     });
   }, // end of update function
 
+  
+  countries :[],
   init: function (callback) {
     var countries=[];
-    nevents = 0;
+    var that = this;
     
     svg = d3.select("div#map");	
     svg.on("click", function() {
-        var event;
-        event = d3.mouse(this);
-        total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
-        var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
-        
-        if(countries.indexOf(clickedCountry)==-1){
-          countries.push(clickedCountry);
-        }else
-        {
-          countries.splice(countries.indexOf(clickedCountry),1);
-        }
-        var html ='';
-        
-        for(var country in countries){
-          html += '<p>' + countries[country] + '</p>';
-        }
-        console.log(html);
-        document.getElementById('country_list').innerHTML = html;
-      });
+      var event;
+      event = d3.mouse(this);
+      total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
+      var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
+      
+      if(countries.indexOf(clickedCountry) == -1) {
+        countries.push(clickedCountry);
+      } else {
+        countries.splice(countries.indexOf(clickedCountry), 1);
+      }
+      that.countries = countries;
+      
+      var html ='';
+      for(var country in countries){
+        html += '<p>' + countries[country] + '</p>';
+      }
+      console.log(countries);
+      document.getElementById('country_list').innerHTML = html;
+    });
 
 	  d3.json("data/gtd.json", function(error, data) {
 	    if (error) return console.warn(error);
 	    this.data = data;
       callback();
-	    }); 
+	  }); 
   } // end of init function
 }
 
+// event heatmap
+var heatmap = (function(){
+
+
+  return {
+  
+  };
+})();
 
 // Slider area
 var slider = (function(){
@@ -277,10 +289,15 @@ var slider = (function(){
 
   var update_view = function(month_range) {
     //console.log(month_range);
+
+    // update the world map
     WORLDMAP.update(
       month_range[0].getFullYear(), month_range[0].getMonth()+1,
       month_range[1].getFullYear(), month_range[1].getMonth()+1
     );
+
+    // update the heat map
+    // code goes here
   }
 
   var init = function() {
@@ -301,5 +318,6 @@ var slider = (function(){
     dataset: function() { return dataset; }
   };
 })();
+
 
 WORLDMAP.init(slider.init);
