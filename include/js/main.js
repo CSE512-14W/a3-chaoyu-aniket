@@ -88,10 +88,12 @@ var WORLDMAP = {
       },
       data: this.world_data,
       geographyConfig:{
-      	  borderColor: 'hsl(0,0%,80%)',
-	      highlightBorderColor: 'hsl(0,0%,0%)',
-	      highlightFillColor: 'rgb(0,0,0)',
-	      highlightOnHover: false,
+        borderColor: 'hsl(0,0%,80%)',
+        //highlightBorderColor: 'hsl(0,0%,4%)',
+        //highlightBorderColor: '#ddd',
+	      highlightFillColor: 'hsl(0,0%,20%)',
+	      highlightOnHover: true,
+        highlightBorderWidth: 0,
 	      popupTemplate: function(geography, data) {
           if(data)
             return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
@@ -136,7 +138,7 @@ var WORLDMAP = {
       callback();
 	  }); 
   } // end of init function
-}
+};
 
 // event heatmap
 var heatmap = (function(){
