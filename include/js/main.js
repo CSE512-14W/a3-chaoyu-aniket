@@ -75,15 +75,15 @@ var WORLDMAP = {
     var currentMap = new Datamap({
       element: document.getElementById('map'),
       fills: {
-        0: "#800000",
-        1: "#8A1818",
-        2: "#943131",
-        3: "#9F4949",
+        8: "#800000",
+        7: "#8A1818",
+        6: "#943131",
+        5: "#9F4949",
         4: "#A96262",
-        5: "#B37A7A",
-        6: "#BE9393",
-        7: "#C8ABAB",
-        8: "#D2C4C4",
+        3: "#B37A7A",
+        2: "#BE9393",
+        1: "#C8ABAB",
+        0: "#D2C4C4",
         defaultFill: 'DDDDDD'
       },
       data: this.world_data,
