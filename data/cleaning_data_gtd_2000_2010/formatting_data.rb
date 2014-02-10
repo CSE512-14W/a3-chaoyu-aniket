@@ -100,18 +100,92 @@ def generate_sum_of_kill_by_month
   return sum_of_nkill_table
 end
 
+def generate_circles_info
+  country_code_map = generate_country_code_map
+
+  # original gtd_data in csv format
+  gtd_data_file = File.open("gtd.csv", "r")
+  data_obj = []
+
+  gtd_data_file.each do |line|
+    # event_info array:
+    #  0 -> eventid
+    #  1 -> year
+    #  2 -> month
+    #  3 -> day
+    #  4 -> country code
+    #  5 -> country name
+    #  6 -> number of kill
+    #  7 -> summary of accident
+    event_info  = line.split(/\t/)
+    event_id    = event_info[0]
+    country     = event_info[5]
+    year        = event_info[1]
+    month       = event_info[2]
+    day         = event_info[3]
+    nkill       = event_info[6].to_i
+    #summary     = event_info[7]
+    
+    if not country_code_map.has_key?(country)
+      puts "Missing Code: #{country}"
+    end
+
+    #data_obj << {
+    #  :country => country_code_map[country],
+    #  :year    => year,
+    #  :month   => month,
+    #  :day     => day,
+    #  :nkill   => nkill,
+    #  :id      => event_id
+    #} 
+
+    ccode = country_code_map[country]
+    flag = true
+
+    data_obj.each do |obj|
+      if obj[:country] == ccode && obj[:year] == year && obj[:month] == month && obj[:day] == day
+        obj[:nkill] += nkill
+        obj[:event_ids] << event_id
+        flag = false
+      end
+    end
+
+    if flag
+      data_obj << {
+        :country => ccode,
+        :year    => year,
+        :month   => month,
+        :day     => day,
+        :nkill   => nkill,
+        :event_ids => [event_id]
+      }
+    end
+  end
+
+  gtd_data_file.close
+
+  #countries.keys.each do |key|
+  #  puts "#{key}\t#{countries[key]}"
+  #end
+
+  return data_obj
+end
+
+
 if $0 == __FILE__
   # print the gtd.json
   #data_obj = generate_info_hash
   #fprint_in_json data_obj, "gtd.json"
 
   # print the sum_table
-  sum_of_nkill_table = generate_sum_of_kill_by_month
-  sum_of_nkill_table.keys.each do |year|
-    sum_of_nkill_table[year].to_enum.with_index(1).each do |nkill, month|
-      puts "#{year}-#{month},#{nkill}"
-    end
-  end
+  #sum_of_nkill_table = generate_sum_of_kill_by_month
+  #sum_of_nkill_table.keys.each do |year|
+  #  sum_of_nkill_table[year].to_enum.with_index(1).each do |nkill, month|
+  #    puts "#{year}-#{month},#{nkill}"
+  #  end
+  #end
 
+  data_obj = generate_circles_info 
+  fprint_in_json data_obj, "circles.json"
 end
 

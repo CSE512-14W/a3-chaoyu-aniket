@@ -20,7 +20,7 @@ body {
   font-size: 35px;
 }
 
-#slider {
+#slider, #heatmap {
   width: 100%;
 }
 
@@ -64,6 +64,9 @@ div#country_list{
 }
 
 footer {
-  margin: 20px auto 20px auto;
-  width: 200px;
+  padding-top: 20px;
+}
+
+footer p {
+  text-align: center;
 }

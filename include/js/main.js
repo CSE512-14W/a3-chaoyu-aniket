@@ -16,25 +16,25 @@ var WORLDMAP = {
 
     for(var i=0; i < data.length; i++){
       
-      var bool = new Boolean();
-      bool = true;
+      var flag = new Boolean();
+      flag = true;
       
       if(parseInt(data[i].year) < f_year){
-          bool = false;
+          flag = false;
       }
       else if(parseInt(data[i].year) == f_year){
         if(parseInt(data[i].month) < f_month)
-          bool = false;
+          flag = false;
       };
       
       if(parseInt(data[i].year) > t_year){
-        bool = false;
+        flag = false;
       }else if(parseInt(data[i].year) == t_year){
-        if(parseInt(data[i].month) > t_month)
-          bool = false;
+        if(parseInt(data[i].month) > t_month - 1)
+          flag = false;
       };
      
-      if(bool){
+      if(flag){
         totalKilled += parseInt(data[i].nkill);
         if(this.world_data[data[i].country] == null){
           this.world_data[data[i].country] = parseInt(data[i].nkill)
@@ -91,9 +91,10 @@ var WORLDMAP = {
         borderColor: 'hsl(0,0%,80%)',
         //highlightBorderColor: 'hsl(0,0%,4%)',
         //highlightBorderColor: '#ddd',
-	      highlightFillColor: 'hsl(0,0%,20%)',
+        highlightFillColor: 'hsl(0,0%,20%)',
 	      highlightOnHover: true,
         highlightBorderWidth: 0,
+        fillOpacity: 0.9,
 	      popupTemplate: function(geography, data) {
           if(data)
             return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
@@ -106,7 +107,8 @@ var WORLDMAP = {
 
   
   countries :[],
-  init: function (callback) {
+  //country_names: [],
+  init: function () {
     var countries=[];
     var that = this;
     
@@ -122,33 +124,28 @@ var WORLDMAP = {
       } else {
         countries.splice(countries.indexOf(clickedCountry), 1);
       }
+      console.log(countries);
       that.countries = countries;
+      // update circlesmap when clicked countries changes
+      circlesmap.update();
       
       var html ='';
       for(var country in countries){
         html += '<p>' + countries[country] + '</p>';
       }
-      console.log(countries);
       document.getElementById('country_list').innerHTML = html;
     });
 
 	  d3.json("data/gtd.json", function(error, data) {
 	    if (error) return console.warn(error);
 	    this.data = data;
-      callback();
+      that.data = data;
+      slider.init();
+      circlesmap.init();
 	  }); 
   } // end of init function
 };
 
-// event heatmap
-var heatmap = (function(){
-   
-
-
-  return {
-  
-  };
-})();
 
 // Slider area
 var slider = (function(){
@@ -169,7 +166,7 @@ var slider = (function(){
   // doc: https://github.com/mbostock/d3/wiki/Time-Formatting
   var format = d3.time.format("%Y-%m");
   
-  var dataset = []
+  var dataset = [];
   var draw = function(dataset) {
     // append svg
     console.log("create svg");
@@ -190,30 +187,17 @@ var slider = (function(){
                 
     // setting up scale
     var nkill_range = [d3.min(dataset, function(d) { return d.nkill; }),
-                        d3.max(dataset, function(d) { return d.nkill; })]
+                        d3.max(dataset, function(d) { return d.nkill; })];
     var time_range = [d3.min(dataset, function(d) { return d.time; }),
-                        d3.max(dataset, function(d) { return d.time; })]
+                        d3.max(dataset, function(d) { return d.time; })];
     // y-axis scale
     var yScale = d3.scale.linear()
                          .domain(nkill_range)
                          .range([0.05*h,h])
                          .nice();
-
+                        
     // color scale
     var cScale = d3.scale.log()
-                         .domain(nkill_range)
-                         .range([15, 75]);
-                         
- // color scale
-    var cScaleS = d3.scale.log()
-                         .domain(nkill_range)
-                         .range([0, 100]);
- // color scale
-    var cScaleL = d3.scale.log()
-                         .domain(nkill_range)
-                         .range([87, 25]); 
-// color scale
-    var cScaleL1 = d3.scale.log()
                          .domain(nkill_range)
                          .range([80, 0]);                                                                        
     
@@ -221,7 +205,7 @@ var slider = (function(){
     var tScale = d3.time.scale()
                         .domain(time_range)
                         .nice(d3.time.year)
-                        .range([0,w])
+                        .range([0,w]);
                         //.ticks(d3.time.month, 1)
                         //.tickFormat(d3.time.format('%Y-%B'))
 
@@ -230,6 +214,7 @@ var slider = (function(){
         .extent([new Date(2007, 1), new Date(2008, 1)])
         .on("brushend", function() {
           if (!d3.event.sourceEvent) return; // only transition after input
+
           var extent0 = brush.extent(),
           extent1 = extent0.map(d3.time.month.round);
 
@@ -240,9 +225,8 @@ var slider = (function(){
           }
 
           d3.select(this).transition()
-          .call(brush.extent(extent1))
-          .call(brush.event);
-
+            .call(brush.extent(extent1))
+            .call(brush.event);
           //d3.select(this).call(brush.extent(extent1));
         })
         .on("brush", function(){
@@ -255,9 +239,7 @@ var slider = (function(){
           }
 
           update_view(extent1);
-        })
-        ;
-
+        });
        
     // Draw the Chart
     svg.selectAll("rect")
@@ -268,13 +250,8 @@ var slider = (function(){
           x: function(d, i) { return i* (w/dataset.length);},
           y: function(d) { return h - yScale(d.nkill);},
           width: w / dataset.length - barPadding,
-          height: function(d) { return yScale(d.nkill); },
-          fill: function(d) { 
-          	var color = "hsl(0, 0%,"+ cScaleL1(d.nkill) + "%)";
-          	//var color = "hsla(0, "+ cScaleS(d.nkill) + '%,'+ cScaleL(d.nkill) + "%,1)";
-          	console.log(color);
-          	return color;}
-          //fill: function(d) { return "hsla(13, 100%, " + (95 -cScale(d.nkill)) + "%,1)";}
+          height: function(d) { return yScale(d.nkill);},
+          fill: function(d) { return "hsl(0, 0%,"+ cScale(d.nkill) + "%)";}
         });
       
     
@@ -319,9 +296,9 @@ var slider = (function(){
       month_range[1].getFullYear(), month_range[1].getMonth()+1
     );
 
-    // update the heat map
-    // code goes here
-  }
+    // update the circlesmap
+    circlesmap.update(month_range);
+  };
 
   var init = function() {
     // Read csv file
@@ -342,4 +319,127 @@ var slider = (function(){
   };
 })();
 
-WORLDMAP.init(slider.init);
+
+// event circlesmap
+var circlesmap = (function(){
+  var margin = {top:0, right:20, bottom: 20, left: 60},
+      canvas_width = +(d3.select('#circlesmap').style('width').replace('px', '')),
+      width = canvas_width - margin.left - margin.right,
+      height = 40,
+      cell_height = 40;
+
+  var current_time_range = [new Date(2007, 1), new Date(2008, 1)]
+
+  var gtd_data = {};
+  var formatting_data = function(raw_data) {
+    // if gtd data is already formatted, then return it
+    if (!_.isEmpty(gtd_data)) { return gtd_data; }
+
+    //console.log(raw_data)
+    for(var i=0; i < raw_data.length; i++){
+      var country = raw_data[i].country,
+          year    = +raw_data[i].year,
+          month   = +raw_data[i].month,
+          day     = +raw_data[i].day,
+          nkill   = +raw_data[i].nkill;
+
+      if(_.isEmpty(gtd_data[country])) { gtd_data[country] = []; }
+
+      date = new Date(year, month-1, day)
+
+      gtd_data[country].push({
+        time  : date,
+        nkill : nkill
+      });
+    }
+
+    console.log(gtd_data);
+    return gtd_data;
+  };
+
+  var update_view = function(time_range) {
+    // get the time range
+    if(typeof time_range !== 'undefined'){
+      current_month_range = time_range;
+    }
+
+    // countries added to list
+    var countries = WORLDMAP.countries; // ["3_Letters_Country_Code"]
+
+    if(countries.length == 0){
+      console.log("empty list");
+      return ;
+    }
+
+    // calculate svg height
+    height = countries.length * cell_height;
+
+    // generating data to draw with
+    var data = _.map(countries, function(country) {
+      return {
+        country: country,
+        days:_.filter(gtd_data[country], function(day){
+          return day.time > current_month_range[0] &&
+                  day.time < current_month_range[1];
+        })
+      }
+    });
+    //console.log(current_month_range);
+    //console.log(data);
+
+    // Remove old circlesmap if there is one
+    $("#circlesmap svg").remove();
+
+    // Draw the updated circlesmap
+    // Set the time scale for the x ais
+    var xScale = d3.time.scale()
+                      .range([0, width])
+                      .domain(current_month_range);
+
+    var svg = d3.select("#circlesmap")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      ;
+
+    var circles = new Array();
+    for(var i=0; i<data.length; i++){
+      // draw each counrty separately
+      var g = svg.append("g")
+
+      circles[i] = g.selectAll("circle")
+        .data(data[i])
+        .enter()
+        .append("circle");
+
+      circles[i]
+        .attr("cx", function(d, i) { return xScale(d.time) })
+        .attr("cy", function(d) { return (i + 0.5) * cell_height; })
+        .attr("r", function(d) { return radiusScale(d.nkill)})
+        .style("stroke", 'black')
+        .style("fill", 'black');
+    }
+
+    // end of drawing circlesmap
+  };
+
+  var init = function() {
+    var that = this;
+    d3.json("data/circles.json", function(error, data) {
+	    if (error) return console.warn(error);
+	    that.raw_data = data;
+      formatting_data(data);
+	  }); 
+  };
+
+  return {
+    init: init,
+    gtd_data: function() { return gtd_data; },
+    update: update_view
+  };
+})();
+
+
+WORLDMAP.init();
