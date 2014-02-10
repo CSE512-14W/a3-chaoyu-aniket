@@ -116,11 +116,14 @@ var WORLDMAP = {
       event = d3.mouse(this);
       total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
       var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
-      
-      if(countries.indexOf(clickedCountry) == -1) {
-        countries.push(clickedCountry);
-      } else {
-        countries.splice(countries.indexOf(clickedCountry), 1);
+      var clickedCountryColor = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("style").split(" ")[1];
+      console.log(clickedCountryColor);
+      if(clickedCountryColor=='#333333;'){
+	      if(countries.indexOf(clickedCountry) == -1) {
+	        countries.push(clickedCountry);
+	      } else {
+	        countries.splice(countries.indexOf(clickedCountry), 1);
+	      }
       }
       that.countries = countries;
       

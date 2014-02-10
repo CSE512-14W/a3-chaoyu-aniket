@@ -41,10 +41,7 @@ Hovering over a country in the World Map reveals the total number of killings in
 
 ####Dataset
 The visualization heavily depends upon dataset acquired from [Global Terrorism Database](http://www.start.umd.edu/gtd) (GTD, University of Maryland). 
->It is currently the most comprehensive unclassified data base on over 113,000 terrorist events, occurred between 1970 and 2012 in the world.[^1]  [^2]
-
-[^1]: <http://www.start.umd.edu/gtd/about/>
-[^2]: It lacks the data from the year 1993. The original PGIS data, upon which the 1970-1997 GTD data are based, consisted of hard-copy index cards, which were subsequently coded electronically by START researchers. Unfortunately, the set of cards for 1993 was lost prior to PGIS handing the data over to START.
+>It is currently the most comprehensive unclassified data base on over 113,000 terrorist events, occurred between 1970 and 2012 in the world.
 
 Each event consists information on the date, location, number of people killed and injured, weapons used, intention, group or individual involved, target, summary, cites, etc.
 
