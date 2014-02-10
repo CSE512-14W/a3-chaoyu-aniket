@@ -11,45 +11,52 @@ var WORLDMAP = {
     t_year = typeof t_year !== 'undefined' ? t_year : 2011;
     t_month = typeof t_month !== 'undefined' ? t_month : 1;
 
-    //var world_data = {};
     var totalKilled = 0;
     //console.log(data);
 
     for(var i=0; i < data.length; i++){
       
-      var bool = new Boolean();
-      bool = true;
+      var flag = new Boolean();
+      flag = true;
       
       if(parseInt(data[i].year) < f_year){
-          bool = false;
+          flag = false;
       }
       else if(parseInt(data[i].year) == f_year){
         if(parseInt(data[i].month) < f_month)
-          bool = false;
+          flag = false;
       };
       
       if(parseInt(data[i].year) > t_year){
-        bool = false;
+        flag = false;
       }else if(parseInt(data[i].year) == t_year){
-        if(parseInt(data[i].month) > t_month)
-          bool = false;
+        if(parseInt(data[i].month) > t_month - 1)
+          flag = false;
       };
      
-      if(bool){
-      totalKilled += parseInt(data[i].nkill);
-        if(this.world_data[data[i].country]==null){
-            this.world_data[data[i].country] = parseInt(data[i].nkill)
-          }
-          else{
-            this.world_data[data[i].country] = parseInt(data[i].nkill) + this.world_data[data[i].country];
-          };	
+      if(flag){
+        totalKilled += parseInt(data[i].nkill);
+        if(this.world_data[data[i].country] == null){
+          this.world_data[data[i].country] = parseInt(data[i].nkill)
+        }
+        else{
+          this.world_data[data[i].country] = parseInt(data[i].nkill) + this.world_data[data[i].country];
+        };	
       };
     };
    
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between ' + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + ' worldwide.'
-    console.log(html);
+    var get3LetterMonth = function(month) {
+    	
+    	var name = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC' ];
+    	return name[month-1];
+    }
+
+    var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between '
+                  + get3LetterMonth(f_month)+', ' + f_year + " and "+ get3LetterMonth(t_month)+', '+ t_year+'.';
+    //console.log(html);
+
     document.getElementById('totalKill').innerHTML = html;
     //console.log(this.world_data);
 
@@ -60,7 +67,6 @@ var WORLDMAP = {
                         .range([0, 8])
                         .nice();
 
-    var mapColors = {};
     for (var country in this.world_data) {
       var obj = {}
       obj['fillKey'] = Math.ceil(colorScale(this.world_data[country]));
@@ -68,27 +74,32 @@ var WORLDMAP = {
       this.world_data[country] = obj;
     }
 
-    console.log(this.world_data);
+    //console.log(this.world_data);
     $("#map svg").remove();
     
     var currentMap = new Datamap({
       element: document.getElementById('map'),
       fills: {
-        0: "rgb(255,245,240)",
-        1: "rgb(254,224,210)",
-        2: "rgb(252,187,161)",
-        3: "rgb(252,146,114)",
-        4: "rgb(251,106,74)",
-        5: "rgb(239,59,44)",
-        6: "rgb(203,24,29)",
-        7: "rgb(165,15,21)",
-        8: "rgb(103,0,13)",
-        defaultFill: 'rgb(200,200,200)'
+        8: "#800000",
+        7: "#8A1818",
+        6: "#943131",
+        5: "#9F4949",
+        4: "#A96262",
+        3: "#B37A7A",
+        2: "#BE9393",
+        1: "#C8ABAB",
+        0: "#D2C4C4",
+        defaultFill: '#DDDDDD'
       },
       data: this.world_data,
       geographyConfig:{
-	      highlightBorderColor: '#AAAAAA',
-	      highlightFillColor: '#000000',
+        borderColor: 'hsl(0,0%,80%)',
+        //highlightBorderColor: 'hsl(0,0%,4%)',
+        //highlightBorderColor: '#ddd',
+        highlightFillColor: 'hsl(0,0%,20%)',
+	      highlightOnHover: true,
+        highlightBorderWidth: 0,
+        fillOpacity: 0.9,
 	      popupTemplate: function(geography, data) {
           if(data)
             return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
@@ -99,39 +110,49 @@ var WORLDMAP = {
     });
   }, // end of update function
 
-  init: function (callback) {
+  
+  countries :[],
+  //country_names: [],
+  init: function () {
     var countries=[];
-    nevents = 0;
+    var that = this;
     
     svg = d3.select("div#map");	
     svg.on("click", function() {
-        var event;
-        event = d3.mouse(this);
-        total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
-        var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
-        
-        if(countries.indexOf(clickedCountry)==-1){
-          countries.push(clickedCountry);
-        }else
-        {
-          countries.splice(countries.indexOf(clickedCountry),1);
-        }
-        var html ='';
-        
-        for(var country in countries){
-          html += '<p>' + countries[country] + '</p>';
-        }
-        console.log(html);
-        document.getElementById('country_list').innerHTML = html;
-      });
+      var event;
+      event = d3.mouse(this);
+      total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
+      var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
+      var clickedCountryColor = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("style").split(" ")[1];
+      
+      if(clickedCountryColor=='#333333;'){
+	      if(countries.indexOf(clickedCountry) == -1) {
+	        countries.push(clickedCountry);
+	      } else {
+	        countries.splice(countries.indexOf(clickedCountry), 1);
+	      }
+      }
+      console.log(countries);
+      that.countries = countries;
+      // update circlesmap when clicked countries changes
+      circlesmap.update();
+      
+      var html ='';
+      for(var country in countries){
+        html += '<p>' + countries[country] + '</p>';
+      }
+      document.getElementById('country_list').innerHTML = html;
+    });
 
 	  d3.json("data/gtd.json", function(error, data) {
 	    if (error) return console.warn(error);
 	    this.data = data;
-      callback();
-	    }); 
+      that.data = data;
+      slider.init();
+      circlesmap.init();
+	  }); 
   } // end of init function
-}
+};
 
 
 // Slider area
@@ -140,7 +161,7 @@ var slider = (function(){
   var margin = {top:0, right:20, bottom: 30, left: 20},
       canvas_width = +(d3.select('#slider').style('width').replace('px', '')),
       w = canvas_width - margin.left - margin.right,
-      h = 130,
+      h = 70,
       barPadding = 1;
 
   // Parsing data from sumTable.csv
@@ -153,7 +174,7 @@ var slider = (function(){
   // doc: https://github.com/mbostock/d3/wiki/Time-Formatting
   var format = d3.time.format("%Y-%m");
   
-  var dataset = []
+  var dataset = [];
   var draw = function(dataset) {
     // append svg
     console.log("create svg");
@@ -174,25 +195,25 @@ var slider = (function(){
                 
     // setting up scale
     var nkill_range = [d3.min(dataset, function(d) { return d.nkill; }),
-                        d3.max(dataset, function(d) { return d.nkill; })]
+                        d3.max(dataset, function(d) { return d.nkill; })];
     var time_range = [d3.min(dataset, function(d) { return d.time; }),
-                        d3.max(dataset, function(d) { return d.time; })]
+                        d3.max(dataset, function(d) { return d.time; })];
     // y-axis scale
     var yScale = d3.scale.linear()
                          .domain(nkill_range)
                          .range([0.05*h,h])
                          .nice();
-
+                        
     // color scale
     var cScale = d3.scale.log()
                          .domain(nkill_range)
-                         .range([15, 75]);
+                         .range([80, 0]);                                                                        
     
     // time scale for x-axis
     var tScale = d3.time.scale()
                         .domain(time_range)
                         .nice(d3.time.year)
-                        .range([0,w])
+                        .range([0,w]);
                         //.ticks(d3.time.month, 1)
                         //.tickFormat(d3.time.format('%Y-%B'))
 
@@ -201,6 +222,7 @@ var slider = (function(){
         .extent([new Date(2007, 1), new Date(2008, 1)])
         .on("brushend", function() {
           if (!d3.event.sourceEvent) return; // only transition after input
+
           var extent0 = brush.extent(),
           extent1 = extent0.map(d3.time.month.round);
 
@@ -211,11 +233,8 @@ var slider = (function(){
           }
 
           d3.select(this).transition()
-          .call(brush.extent(extent1))
-          .call(brush.event);
-
-          //update_view(extent1);
-            
+            .call(brush.extent(extent1))
+            .call(brush.event);
           //d3.select(this).call(brush.extent(extent1));
         })
         .on("brush", function(){
@@ -228,9 +247,7 @@ var slider = (function(){
           }
 
           update_view(extent1);
-        })
-        ;
-
+        });
        
     // Draw the Chart
     svg.selectAll("rect")
@@ -241,8 +258,8 @@ var slider = (function(){
           x: function(d, i) { return i* (w/dataset.length);},
           y: function(d) { return h - yScale(d.nkill);},
           width: w / dataset.length - barPadding,
-          height: function(d) { return yScale(d.nkill); },
-          fill: function(d) { return "hsla(13, 100%, " + (95 -cScale(d.nkill)) + "%,1)";}
+          height: function(d) { return yScale(d.nkill);},
+          fill: function(d) { return "hsl(0, 0%,"+ cScale(d.nkill) + "%)";}
         });
       
     
@@ -280,11 +297,16 @@ var slider = (function(){
 
   var update_view = function(month_range) {
     //console.log(month_range);
+
+    // update the world map
     WORLDMAP.update(
       month_range[0].getFullYear(), month_range[0].getMonth()+1,
       month_range[1].getFullYear(), month_range[1].getMonth()+1
     );
-  }
+
+    // update the circlesmap
+    circlesmap.update(month_range);
+  };
 
   var init = function() {
     // Read csv file
@@ -305,4 +327,127 @@ var slider = (function(){
   };
 })();
 
-WORLDMAP.init(slider.init);
+
+// event circlesmap
+var circlesmap = (function(){
+  var margin = {top:0, right:20, bottom: 20, left: 60},
+      canvas_width = +(d3.select('#circlesmap').style('width').replace('px', '')),
+      width = canvas_width - margin.left - margin.right,
+      height = 40,
+      cell_height = 40;
+
+  var current_time_range = [new Date(2007, 1), new Date(2008, 1)]
+
+  var gtd_data = {};
+  var formatting_data = function(raw_data) {
+    // if gtd data is already formatted, then return it
+    if (!_.isEmpty(gtd_data)) { return gtd_data; }
+
+    //console.log(raw_data)
+    for(var i=0; i < raw_data.length; i++){
+      var country = raw_data[i].country,
+          year    = +raw_data[i].year,
+          month   = +raw_data[i].month,
+          day     = +raw_data[i].day,
+          nkill   = +raw_data[i].nkill;
+
+      if(_.isEmpty(gtd_data[country])) { gtd_data[country] = []; }
+
+      date = new Date(year, month-1, day)
+
+      gtd_data[country].push({
+        time  : date,
+        nkill : nkill
+      });
+    }
+
+    console.log(gtd_data);
+    return gtd_data;
+  };
+
+  var update_view = function(time_range) {
+    // get the time range
+    if(typeof time_range !== 'undefined'){
+      current_month_range = time_range;
+    }
+
+    // countries added to list
+    var countries = WORLDMAP.countries; // ["3_Letters_Country_Code"]
+
+    if(countries.length == 0){
+      console.log("empty list");
+      return ;
+    }
+
+    // calculate svg height
+    height = countries.length * cell_height;
+
+    // generating data to draw with
+    var data = _.map(countries, function(country) {
+      return {
+        country: country,
+        days:_.filter(gtd_data[country], function(day){
+          return day.time > current_month_range[0] &&
+                  day.time < current_month_range[1];
+        })
+      }
+    });
+    //console.log(current_month_range);
+    //console.log(data);
+
+    // Remove old circlesmap if there is one
+    $("#circlesmap svg").remove();
+
+    // Draw the updated circlesmap
+    // Set the time scale for the x ais
+    var xScale = d3.time.scale()
+                      .range([0, width])
+                      .domain(current_month_range);
+
+    var svg = d3.select("#circlesmap")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      ;
+
+    var circles = new Array();
+    for(var i=0; i<data.length; i++){
+      // draw each counrty separately
+      var g = svg.append("g")
+
+      circles[i] = g.selectAll("circle")
+        .data(data[i])
+        .enter()
+        .append("circle");
+
+      circles[i]
+        .attr("cx", function(d, i) { return xScale(d.time) })
+        .attr("cy", function(d) { return (i + 0.5) * cell_height; })
+        .attr("r", function(d) { return radiusScale(d.nkill)})
+        .style("stroke", 'black')
+        .style("fill", 'black');
+    }
+
+    // end of drawing circlesmap
+  };
+
+  var init = function() {
+    var that = this;
+    d3.json("data/circles.json", function(error, data) {
+	    if (error) return console.warn(error);
+	    that.raw_data = data;
+      formatting_data(data);
+	  }); 
+  };
+
+  return {
+    init: init,
+    gtd_data: function() { return gtd_data; },
+    update: update_view
+  };
+})();
+
+
+WORLDMAP.init();

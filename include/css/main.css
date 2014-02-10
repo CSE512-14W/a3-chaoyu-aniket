@@ -1,24 +1,29 @@
 body {
   margin: 0;
   padding: 0;
+  background: #f1f1f1;
+}
+a{
+	color: #000;
+}
+.container {
+  background: #ddd;
 }
 
 #totalKill {
+  padding: 23px 0 20px 0;
   font: 26px 'Titillium Web', arial, sans-serif;
-  background: #f6f6f6;
+  background: #fafafa;
   color: #5E545D;
   text-align: center;
 }
 
 #totalKill b {
-  font-size: 30px;
+  font-size: 35px;
 }
 
-#slider-bg {
+#slider, #heatmap {
   width: 100%;
-}
-
-#slider {
 }
 
 .axis text {
@@ -60,7 +65,12 @@ div#country_list{
   shape-rendering: crispEdges;
 }
 
-footer .container {
+#cite {
+	font-size: 8px;
+	text-align:right;
+}
+
+footer{
   margin: 20px auto 20px auto;
   width: 200px;
 }
