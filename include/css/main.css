@@ -26,13 +26,20 @@ a{
   width: 100%;
 }
 
+#map {
+  position: relative; 
+  width: 100%; 
+  padding-bottom: 40%;
+  height: 0;
+  overflow: hidden
+}
+
 .axis text {
   font: 15px sans-serif;
 }
 
-.axis path {
-  display: none;
-} 
+.axis path,
+  /*display: none;*/
 
 .axis line {
   fill: none;

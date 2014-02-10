@@ -137,11 +137,11 @@ var WORLDMAP = {
       // update circlesmap when clicked countries changes
       circlesmap.update();
       
-      var html ='';
-      for(var country in countries){
-        html += '<p>' + countries[country] + '</p>';
-      }
-      document.getElementById('country_list').innerHTML = html;
+      //var html ='';
+      //for(var country in countries){
+      //  html += '<p>' + countries[country] + '</p>';
+      //}
+      //document.getElementById('country_list').innerHTML = html;
     });
 
 	  d3.json("data/gtd.json", function(error, data) {
@@ -283,7 +283,7 @@ var slider = (function(){
 
     svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + (h+1) + ")")
+      .attr("transform", "translate(0," + h + ")")
       .call(xAxis);
 
     var gBrush = svg.append("g")
@@ -330,7 +330,7 @@ var slider = (function(){
 
 // event circlesmap
 var circlesmap = (function(){
-  var margin = {top:0, right:20, bottom: 20, left: 60},
+  var margin = {top:20, right:20, bottom: 20, left: 60},
       canvas_width = +(d3.select('#circlesmap').style('width').replace('px', '')),
       width = canvas_width - margin.left - margin.right,
       height = 40,
@@ -365,6 +365,12 @@ var circlesmap = (function(){
     return gtd_data;
   };
 
+  var dateDiff = function(from, to) {
+    var milliseconds = to - from;
+    return milliseconds / 86400000;
+  
+  };
+
   var update_view = function(time_range) {
     // get the time range
     if(typeof time_range !== 'undefined'){
@@ -392,42 +398,78 @@ var circlesmap = (function(){
         })
       }
     });
-    //console.log(current_month_range);
-    //console.log(data);
+    console.log(current_month_range);
+    console.log(data);
 
     // Remove old circlesmap if there is one
     $("#circlesmap svg").remove();
 
-    // Draw the updated circlesmap
-    // Set the time scale for the x ais
+    // update the time scale to current range
     var xScale = d3.time.scale()
                       .range([0, width])
                       .domain(current_month_range);
 
+    var rScale = d3.scale.log()
+                      .domain([1, 3000])
+                      .range([0, 25])
+
+    // Draw the updated circlesmap
     var svg = d3.select("#circlesmap")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      ;
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // Draw the xAxis text
+    var days = dateDiff(current_month_range[0], current_month_range[1])
+    var xAxis = d3.svg.axis()
+      .scale(xScale)
+      .orient('top');
+
+    if( days < 95)
+      xAxis.ticks(d3.time.month, 1)
+          .tickFormat(d3.time.format('%Y-%B'))
+    else if (days < 500)
+      xAxis.ticks(d3.time.month, 3)
+          .tickFormat(d3.time.format('%Y-%B'))
+    else 
+      xAxis.ticks(d3.time.year, 1)
+          .tickFormat(d3.time.format('%Y'))
+
+    // Draw xAxis grid
+    svg.append("g")
+      .attr("class", "x grid")
+      .call(xAxis);
+                   
     var circles = new Array();
     for(var i=0; i<data.length; i++){
       // draw each counrty separately
       var g = svg.append("g")
-
-      circles[i] = g.selectAll("circle")
-        .data(data[i])
+      
+      g.selectAll("circle")
+        .data(data[i]['days'])
         .enter()
-        .append("circle");
-
-      circles[i]
+        .append("circle")
         .attr("cx", function(d, i) { return xScale(d.time) })
         .attr("cy", function(d) { return (i + 0.5) * cell_height; })
-        .attr("r", function(d) { return radiusScale(d.nkill)})
+        .attr("r", function(d) { return rScale(d.nkill);})
         .style("stroke", 'black')
-        .style("fill", 'black');
+        .style("fill-opacity", 0);
+
+      g.append("g")
+        .attr("class", "x grid")
+        .attr("transform", "translate(0," + (cell_height * (i+1)) + ")")
+        .call(xAxis
+              .ticks(d3.time.month, 1)
+              .tickFormat(d3.time.format(''))
+             );
+
+      g.append("text")
+        .attr("y", function() { return (cell_height * i) + margin.top; })
+        .attr("x", 0)
+        .text(data[i].country)
+        .attr("transform", "translate( -" + margin.left + ", 0)");
     }
 
     // end of drawing circlesmap
