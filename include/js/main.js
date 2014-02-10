@@ -47,9 +47,14 @@ var WORLDMAP = {
    
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+    var get3LetterMonth = function(month) {
+    	
+    	var name = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC' ];
+    	return name[month-1];
+    }
 
     var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between '
-                  + f_year +'/'+ f_month +" and "+ t_year +'/'+ t_month + '.'
+                  + get3LetterMonth(f_month)+', ' + f_year + " and "+ get3LetterMonth(t_month)+', '+ t_year+'.';
     //console.log(html);
 
     document.getElementById('totalKill').innerHTML = html;
@@ -117,7 +122,7 @@ var WORLDMAP = {
       total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
       var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
       var clickedCountryColor = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("style").split(" ")[1];
-      console.log(clickedCountryColor);
+      
       if(clickedCountryColor=='#333333;'){
 	      if(countries.indexOf(clickedCountry) == -1) {
 	        countries.push(clickedCountry);
