@@ -35,7 +35,7 @@ var WORLDMAP = {
       };
      
       if(bool){
-      totalKilled += parseInt(data[i].nkill);
+        totalKilled += parseInt(data[i].nkill);
         if(this.world_data[data[i].country] == null){
           this.world_data[data[i].country] = parseInt(data[i].nkill)
         }
@@ -138,6 +138,7 @@ var WORLDMAP = {
 
 // event heatmap
 var heatmap = (function(){
+   
 
 
   return {
@@ -318,6 +319,5 @@ var slider = (function(){
     dataset: function() { return dataset; }
   };
 })();
-
 
 WORLDMAP.init(slider.init);
