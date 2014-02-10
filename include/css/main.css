@@ -3,7 +3,9 @@ body {
   padding: 0;
   background: #f1f1f1;
 }
-
+a{
+	color: #000;
+}
 .container {
   background: #ddd;
 }
@@ -63,10 +65,12 @@ div#country_list{
   shape-rendering: crispEdges;
 }
 
-footer {
-  padding-top: 20px;
+#cite {
+	font-size: 8px;
+	text-align:right;
 }
 
-footer p {
-  text-align: center;
+footer{
+  margin: 20px auto 20px auto;
+  width: 200px;
 }
