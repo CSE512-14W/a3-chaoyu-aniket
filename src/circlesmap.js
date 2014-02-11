@@ -139,10 +139,12 @@ var circlesmap = (function(){
               .tickFormat(d3.time.format(''))
              );
 
+      var full_country_name = country_name_mapping[data[i].country]
+
       g.append("text")
         .attr("y", function() { return (cell_height * i) + margin.top; })
         .attr("x", 0)
-        .text(data[i].country)
+        .text(_.isEmpty(full_country_name) ? data[i].country : full_country_name)
         .attr("transform", "translate( -" + margin.left + ", 0)");
     }
     // end of drawing circlesmap

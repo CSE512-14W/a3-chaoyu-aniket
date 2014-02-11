@@ -102,7 +102,8 @@ var WORLDMAP = {
         fillOpacity: 0.9,
         popupTemplate: function(geography, data) {
           if(data)
-            return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed</div>'; 
+            return '<div class="hoverinfo">' + geography.properties.name + '<br>' +  data.nkill + ' people killed' + 
+                   '<br> Click to add/remove ' + '</div>'
           else
             return '<div class="hoverinfo">' + geography.properties.name + '<br>nobody killed</div>'; 
         }
