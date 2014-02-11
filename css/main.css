@@ -26,6 +26,10 @@ a{
   width: 100%;
 }
 
+.slider-bg {
+  background: #f1f1f1;
+}
+
 #map {
   position: relative; 
   width: 100%; 
@@ -55,8 +59,7 @@ div#country_list{
   fill: #ddd;
 }
 
-.grid line,
-.grid path {
+.grid line, .grid path {
   fill: none;
   stroke: #fff;
   shape-rendering: crispEdges;
@@ -67,8 +70,9 @@ div#country_list{
 }
 
 .brush .extent {
-  stroke: #000;
-  fill-opacity: .25;
+  stroke: none;
+  fill: #000;
+  fill-opacity: .1;
   shape-rendering: crispEdges;
 }
 
