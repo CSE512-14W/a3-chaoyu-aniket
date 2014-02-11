@@ -84,7 +84,7 @@ var circlesmap = (function(){
 
     var rScale = d3.scale.log()
                       .domain([1, 3000])
-                      .range([0, 25])
+                      .range([0, 20])
 
     // Draw the updated circlesmap
     var svg = d3.select("#circlesmap")
@@ -127,8 +127,9 @@ var circlesmap = (function(){
         .attr("cx", function(d, i) { return xScale(d.time) })
         .attr("cy", function(d) { return (i + 0.5) * cell_height; })
         .attr("r", function(d) { return rScale(d.nkill);})
-        .style("stroke", 'black')
-        .style("fill-opacity", 0);
+        .style("stroke", 'none')
+        .style("fill", "#800000")
+        .style("fill-opacity", 0.5);
 
       g.append("g")
         .attr("class", "x grid")
