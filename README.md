@@ -37,7 +37,7 @@ To afford comparison and trend discovery between event happenings in two or more
 
 _3. Hover:_
 
-Hovering over a country in the World Map reveals the total number of killings in that country over the period. Hovering over a data point in  the country wise view reveals more information about the event w.r.t. to the data point. 
+Details on demand - Hovering over a country in the World Map reveals the total number of killings in that country over the period. Also, hovering over a data point in  the country wise view reveals more information about the event w.r.t. to the data point. 
 
 ####Dataset
 The visualization heavily depends upon dataset acquired from [Global Terrorism Database](http://www.start.umd.edu/gtd) (GTD, University of Maryland). 
@@ -45,12 +45,12 @@ The visualization heavily depends upon dataset acquired from [Global Terrorism D
 
 Each event consists information on the date, location, number of people killed and injured, weapons used, intention, group or individual involved, target, summary, cites, etc.
 
-The dataset was cleaned before being directly used. Many required values were `null` or inconsistent. For example, some of the country codes were not matching to that in the [Datamap](http://datamaps.github.io/) object.
+The dataset was cleaned before being directly used. Many required values were `null` or inconsistent. For example, some of the 3 Letter country codes from the database were not matching to that in the [Datamap](http://datamaps.github.io/) object.
 
 
 ## Running Instructions
 
-Access our visualization [here](http://cse512-14w.github.io/a3-chaoyu-aniket/).
+Access our visualization [here](http://cse512-14w.github.io/a3-chaoyu-aniket/). View it in full screen for better experience.
 
 ####OR 
 
@@ -80,21 +80,27 @@ We started off with data search and found many datasets which called our attenti
 
 While exploring these charts using Tableau we also simulated them using pages year wise to evaluate various interactions possible.
 
-####Sketching (TODO)
+####Sketching
 
+* During Brainstorm  
+![S1](images/sketch/s1.jpg)
+
+* Final sketch before we started coding
+![S2](images/sketch/s2.jpg)
+
+The top portion is a timeline wherein one can select the months from 2000 to 2010. It is used to brush below two visualizations. It affords all the interactions mentioned above.   
 
 #### Changes between Storyboard and the Final Implementation
 
-There are not any significant changes between the final sketch and the final implementation. Though we kept on fidgeting with the placement of various elements, the colors, the scale used. But, the overall interaction, views and underlining objective remained the same.
+There are not any significant changes between the final sketch and the final implementation. Though there were some stubble changes in placement of various elements, the colors, the scale used. But, the overall interaction, views and underlining objective remained the same.
 
-* Its hard to sketch colors and exactly understand how they will be perceived without an actual running prototype.
-* We didn't consider the use of log scale for color encoding, until we saw the running visualization.
-* 
+* Its hard to sketch colors and exactly understand how they will be perceived without an actual running prototype. We didn't consider the use of log scale for color encoding, until we saw the running visualization.
+* We first envisioned the country wise visualization to be similar to time stream from Tableau (above), but we ended up plotting translucent circles with size dependent upon killings to represent each event.
 
 ## Development Process
 
 ####Work Breakdown
-The two member team divided the work as equally as possible and also helped each other out. Roughly we allocated the tasks as follows:
+The two member team divided the work as equally as possible and also helped each other out on. Roughly we allocated the tasks as follows:
 
 **_Chaoyu Yang_**
 
@@ -153,5 +159,6 @@ So, in total we individually spend approximately 60 hours on the assignment.
 - Data exploration and then cleaning
 - Dirty hack to select countries on the Datamap
 
-####Conclusion
-
+####Future Work
+- Optimize algorithm and queries
+- Details on demand about the event, upon hovering on circles
