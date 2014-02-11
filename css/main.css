@@ -55,8 +55,7 @@ div#country_list{
   fill: #ddd;
 }
 
-.grid line,
-.grid path {
+.grid line, .grid path {
   fill: none;
   stroke: #fff;
   shape-rendering: crispEdges;
