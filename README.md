@@ -1,4 +1,4 @@
-a3-chaoyu-aniket
+Global Terrorism Visualization
 ===============
 
 ## Team Members
