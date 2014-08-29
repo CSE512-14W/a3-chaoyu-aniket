@@ -156,6 +156,7 @@ var circlesmap = (function(){
       if (error) return console.warn(error);
       that.raw_data = data;
       formatting_data(data);
+      update_view();
     }); 
   };
 

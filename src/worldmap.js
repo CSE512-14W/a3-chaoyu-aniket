@@ -114,11 +114,10 @@ var WORLDMAP = {
   countries :[],
   //country_names: [],
   init: function () {
-    var countries=[];
+    var countries=["DZA", "IND", "CHN", "THA", "IRQ"];
     var that = this;
-    
-    svg = d3.select("div#map"); 
-    svg.on("click", function() {
+
+    var render = function() {
       var event;
       event = d3.mouse(this);
       total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
@@ -143,12 +142,15 @@ var WORLDMAP = {
       //  html += '<p>' + countries[country] + '</p>';
       //}
       //document.getElementById('country_list').innerHTML = html;
-    });
+    }
+    
+    svg = d3.select("div#map"); 
+    svg.on("click", render);
+    that.countries = countries;
 
     d3.json("data/gtd.json", function(error, data) {
       if (error) return console.warn(error);
       this.data = data;
-      that.data = data;
       slider.init();
       circlesmap.init();
     }); 

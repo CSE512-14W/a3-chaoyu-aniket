@@ -65,7 +65,7 @@ var slider = (function(){
 
     var brush = d3.svg.brush()
         .x(tScale)
-        .extent([new Date(2007, 1), new Date(2008, 1)])
+        .extent([new Date(2008, 1), new Date(2009, 1)])
         .on("brushend", function() {
           if (!d3.event.sourceEvent) return; // only transition after input
 
