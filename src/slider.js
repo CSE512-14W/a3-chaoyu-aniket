@@ -16,6 +16,9 @@ var slider = (function(){
   // usage: format.parse("2010-1"), reuturns a Date object
   // doc: https://github.com/mbostock/d3/wiki/Time-Formatting
   var format = d3.time.format("%Y-%m");
+
+  var upper_time_limit = new Date(2010, 12);
+  var lower_time_limit = new Date(1999, 12);
   
   var dataset = [];
   var draw = function(dataset) {
@@ -62,7 +65,7 @@ var slider = (function(){
 
     var brush = d3.svg.brush()
         .x(tScale)
-        .extent([new Date(2007, 1), new Date(2008, 1)])
+        .extent([new Date(2008, 1), new Date(2009, 1)])
         .on("brushend", function() {
           if (!d3.event.sourceEvent) return; // only transition after input
 
@@ -71,9 +74,19 @@ var slider = (function(){
 
           // if empty when rounded, use floor & ceil instead
           if (extent1[0] >= extent1[1]) {
-            extent1[0] = d3.time.month.floor(extent0[0]);
-            extent1[1] = d3.time.month.ceil(extent0[1]);
+            extent1[0] = d3.time.month.offset(d3.time.month.ceil(extent0[0]), -6);
+            extent1[1] = d3.time.month.offset(d3.time.month.ceil(extent0[1]), 6);
           }
+
+          if (extent1[0] < lower_time_limit) {
+            extent1[0] = d3.time.month.ceil(lower_time_limit);
+          }
+
+          if (extent1[1] > upper_time_limit) {
+            extent1[1] = d3.time.month.ceil(upper_time_limit);
+          }
+
+          console.log(extent1);
 
           d3.select(this).transition()
             .call(brush.extent(extent1))

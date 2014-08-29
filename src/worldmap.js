@@ -48,7 +48,6 @@ var WORLDMAP = {
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
     var get3LetterMonth = function(month) {
-      
       var name = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC' ];
       return name[month-1];
     }
@@ -115,24 +114,24 @@ var WORLDMAP = {
   countries :[],
   //country_names: [],
   init: function () {
-    var countries=[];
+    var countries=["DZA", "IND", "CHN", "THA", "IRQ"];
     var that = this;
-    
-    svg = d3.select("div#map"); 
-    svg.on("click", function() {
+
+    var render = function() {
       var event;
       event = d3.mouse(this);
       total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
+
       var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
-      var clickedCountryColor = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("style").split(" ")[1];
-      
-      if(clickedCountryColor=='#333333;'){
-        if(countries.indexOf(clickedCountry) == -1) {
-          countries.push(clickedCountry);
-        } else {
-          countries.splice(countries.indexOf(clickedCountry), 1);
-        }
+
+      console.log(typeof clickedCountryColor);
+
+      if(countries.indexOf(clickedCountry) == -1) {
+        countries.push(clickedCountry);
+      } else {
+        countries.splice(countries.indexOf(clickedCountry), 1);
       }
+
       console.log(countries);
       that.countries = countries;
       // update circlesmap when clicked countries changes
@@ -143,12 +142,15 @@ var WORLDMAP = {
       //  html += '<p>' + countries[country] + '</p>';
       //}
       //document.getElementById('country_list').innerHTML = html;
-    });
+    }
+    
+    svg = d3.select("div#map"); 
+    svg.on("click", render);
+    that.countries = countries;
 
     d3.json("data/gtd.json", function(error, data) {
       if (error) return console.warn(error);
       this.data = data;
-      that.data = data;
       slider.init();
       circlesmap.init();
     }); 
