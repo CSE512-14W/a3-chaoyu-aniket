@@ -1,6 +1,6 @@
 Global Terrorism Visualization
 ===============
-:arrow_right: [**RUN THE DEMO HERE**](parano.github.io/Global-Terrorism-Visualization/) :arrow_left:
+:arrow_right: [**RUN THE DEMO HERE**](http://parano.github.io/Global-Terrorism-Visualization/) :arrow_left:
 ![Screenshot](images/screenshot.png)
 
 ## Team Members
