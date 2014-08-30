@@ -1,5 +1,5 @@
 // Slider area
-var slider = (function(){
+var slider_generator = function(){
   // svg attributes
   var margin = {top:0, right:20, bottom: 30, left: 20},
       canvas_width = +(d3.select('#slider').style('width').replace('px', '')),
@@ -181,4 +181,4 @@ var slider = (function(){
     init: init,
     dataset: function() { return dataset; }
   };
-})();
+};
