@@ -1,10 +1,10 @@
 // Slider area
 var slider_generator = function(){
   // svg attributes
-  var margin = {top:0, right:15, bottom: 30, left: 15},
+  var margin = {top:0, right:15, bottom: 20, left: 15},
       canvas_width,
       w,
-      h = 70,
+      h = 60,
       barPadding = 1;
 
   var initCanvasSize = function(){
