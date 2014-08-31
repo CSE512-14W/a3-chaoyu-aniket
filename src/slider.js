@@ -28,7 +28,7 @@ var slider_generator = function(){
   var dataset = [];
   var draw = function(dataset) {
     // append svg
-    console.log("create svg");
+    //console.log("create svg");
     var svg = d3.select("#slider")
                 .append("svg")
                 .attr("width", w + margin.left + margin.right)
@@ -91,18 +91,19 @@ var slider_generator = function(){
             extent1[1] = d3.time.month.ceil(upper_time_limit);
           }
 
-          console.log(extent1);
+          //console.log(extent1);
 
           d3.select(this).transition()
             .call(brush.extent(extent1))
             .call(brush.event);
           //d3.select(this).call(brush.extent(extent1));
+
         })
         .on("brush", function(){
           var extent0 = brush.extent(),
           extent1 = extent0.map(d3.time.month.round);
 
-           if (extent1[0] >= extent1[1]) {
+          if (extent1[0] >= extent1[1]) {
             extent1[0] = d3.time.month.floor(extent0[0]);
             extent1[1] = d3.time.month.ceil(extent0[1]);
           }
@@ -187,7 +188,7 @@ var slider_generator = function(){
   };
 
   var redraw = function(){
-    $("#slider svg").remove();
+    d3.select("div#slider svg").remove();
     initCanvasSize();
     draw(dataset);
     update_view(current_month_range);

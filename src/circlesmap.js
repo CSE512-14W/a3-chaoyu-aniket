@@ -36,7 +36,7 @@ var circlesmap_generator = function(){
       });
     }
 
-    console.log(gtd_data);
+    //console.log(gtd_data);
     return gtd_data;
   };
 
@@ -56,10 +56,10 @@ var circlesmap_generator = function(){
     var countries = WORLDMAP.countries; // ["3_Letters_Country_Code"]
 
     if(countries.length == 0){
-      console.log("empty list");
+      //console.log("empty list");
 
       // Remove old circlesmap if there is one
-      $("#circlesmap svg").remove();
+      d3.select("div#circlesmap svg").remove();
       return ;
     }
 
@@ -76,11 +76,11 @@ var circlesmap_generator = function(){
         })
       }
     });
-    console.log(current_month_range);
-    console.log(data);
+    //console.log(current_month_range);
+    //console.log(data);
 
     // Remove old circlesmap if there is one
-    $("#circlesmap svg").remove();
+    d3.select("div#circlesmap svg").remove();
 
     // update the time scale to current range
     var xScale = d3.time.scale()
