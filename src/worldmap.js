@@ -45,6 +45,9 @@ var WORLDMAP = {
         };  
       };
     };
+
+    totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
    
     var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between '
                   + this.get3LetterMonth(f_month)+', ' + f_year + " and "+ this.get3LetterMonth(t_month)+', '+ t_year+'.';
@@ -52,6 +55,7 @@ var WORLDMAP = {
 
     document.getElementById('totalKill').innerHTML = html;
     //console.log(this.world_data);
+
 
     for (var country in this.world_data) {
       var obj = {}
