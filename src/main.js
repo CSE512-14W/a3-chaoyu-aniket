@@ -7,3 +7,7 @@ $(document).ready(function(){
   WORLDMAP.init();
 });
 
+$(window).resize(function(){
+  circlesmap.initCanvasSize();
+  slider.redraw();
+});

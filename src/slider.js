@@ -156,8 +156,10 @@ var slider_generator = function(){
       .attr("height", h);
   };
 
+  var current_month_range;
   var update_view = function(month_range) {
     //console.log(month_range);
+    current_month_range = month_range;
 
     // update the world map
     WORLDMAP.update(
@@ -184,9 +186,16 @@ var slider_generator = function(){
     });
   };
 
+  var redraw = function(){
+    $("#slider svg").remove();
+    initCanvasSize();
+    draw(dataset);
+    update_view(current_month_range);
+  };
+
   return {
     init: init,
-    initCanvasSize: initCanvasSize,
+    redraw: redraw,
     dataset: function() { return dataset; }
   };
 };
