@@ -1,11 +1,16 @@
 // Slider area
 var slider_generator = function(){
   // svg attributes
-  var margin = {top:0, right:20, bottom: 30, left: 20},
-      canvas_width = +(d3.select('#slider').style('width').replace('px', '')),
-      w = canvas_width - margin.left - margin.right,
+  var margin = {top:0, right:15, bottom: 30, left: 15},
+      canvas_width,
+      w,
       h = 70,
       barPadding = 1;
+
+  var initCanvasSize = function(){
+      canvas_width = +(d3.select('#slider').style('width').replace('px', ''));
+      w = canvas_width - margin.left - margin.right;
+  }
 
   // Parsing data from sumTable.csv
   // csv format example: 
@@ -165,6 +170,8 @@ var slider_generator = function(){
   };
 
   var init = function() {
+    initCanvasSize();
+
     // Read csv file
     d3.csv("data/sumTable.csv", function(data){
       dataset = data.map(function(d) {
@@ -179,6 +186,7 @@ var slider_generator = function(){
 
   return {
     init: init,
+    initCanvasSize: initCanvasSize,
     dataset: function() { return dataset; }
   };
 };

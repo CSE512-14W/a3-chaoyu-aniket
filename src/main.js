@@ -6,3 +6,4 @@ $(document).ready(function(){
   slider = slider_generator();
   WORLDMAP.init();
 });
+

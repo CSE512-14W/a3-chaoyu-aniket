@@ -1,10 +1,15 @@
 // event circlesmap
 var circlesmap_generator = function(){
   var margin = {top:20, right:20, bottom: 20, left: 60},
-  canvas_width = +(d3.select('#circlesmap').style('width').replace('px', '')),
-  width = canvas_width - margin.left - margin.right,
-  height = 40,
-  cell_height = 40;
+      height = 40,
+      cell_height = 40,
+      canvas_width,
+      width;
+
+  var initCanvasSize = function(){
+      canvas_width = +(d3.select('#circlesmap').style('width').replace('px', ''));
+      width = canvas_width - margin.left - margin.right;
+  }
 
   var current_time_range = [new Date(2007, 1), new Date(2008, 1)]
 
@@ -152,6 +157,8 @@ var circlesmap_generator = function(){
 
   var init = function() {
     var that = this;
+    initCanvasSize();
+
     d3.json("data/circles.json", function(error, data) {
       if (error) return console.warn(error);
       that.raw_data = data;
@@ -162,6 +169,7 @@ var circlesmap_generator = function(){
 
   return {
     init: init,
+    initCanvasSize: initCanvasSize,
     gtd_data: function() { return gtd_data; },
     update: update_view
   };

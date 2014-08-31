@@ -1,5 +1,4 @@
 var WORLDMAP = {
-
   data: {},
   world_data: {},
   
