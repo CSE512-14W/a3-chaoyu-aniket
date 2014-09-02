@@ -106,7 +106,7 @@ var WORLDMAP = {
   countries :[],
   //country_names: [],
   init: function () {
-    var countries=["DZA", "IND", "CHN", "THA", "IRQ"];
+    var countries=["IRQ", "PAK", "CHN", "IND"];
     var that = this;
 
     // create the color scale on the world map
