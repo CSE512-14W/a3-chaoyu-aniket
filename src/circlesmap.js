@@ -11,7 +11,7 @@ var circlesmap_generator = function(){
       width = canvas_width - margin.left - margin.right;
   }
 
-  var current_time_range = [new Date(2007, 1), new Date(2008, 1)]
+  var current_month_range = [new Date(2007, 1), new Date(2008, 1)]
 
   var gtd_data = {};
   var formatting_data = function(raw_data) {
@@ -36,7 +36,12 @@ var circlesmap_generator = function(){
       });
     }
 
-    //console.log(gtd_data);
+    // sort all the events by time
+    _.each(gtd_data, function(country_event_list){
+      country_event_list = country_event_list.sort(function(a, b){
+        return a.time - b.time;
+      });
+    });
     return gtd_data;
   };
 
@@ -68,14 +73,36 @@ var circlesmap_generator = function(){
 
     // generating data to draw with
     var data = _.map(countries, function(country) {
-      return {
-        country: country,
-        days:_.filter(gtd_data[country], function(day){
-          return day.time > current_month_range[0] &&
-            day.time < current_month_range[1];
-        })
+      var i, j;
+      var res = {
+        country: country, 
+        days: []
+      };
+
+      var days = gtd_data[country];
+      if(days === undefined) {
+        return res;
       }
+
+      var flag = true;
+      for(i=0; i<days.length; i++) {
+        if(days[i].time < current_month_range[0]) {
+          continue;
+        } 
+
+        for(j=i; j<days.length; j++) {
+          if(days[j].time > current_month_range[1]) {
+            break;
+          } else {
+            res.days.push(days[j]);
+          }
+        }
+        break;
+      }
+
+      return res;
     });
+
     //console.log(current_month_range);
     //console.log(data);
 

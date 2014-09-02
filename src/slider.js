@@ -96,8 +96,9 @@ var slider_generator = function(){
           d3.select(this).transition()
             .call(brush.extent(extent1))
             .call(brush.event);
-          //d3.select(this).call(brush.extent(extent1));
+            //d3.select(this).call(brush.extent(extent1));
 
+          update_view(extent1);
         })
         .on("brush", function(){
           var extent0 = brush.extent(),
