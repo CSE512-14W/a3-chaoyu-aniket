@@ -1,5 +1,7 @@
-a3-chaoyu-aniket
+Global Terrorism Visualization
 ===============
+:arrow_right: [**RUN THE DEMO HERE**](http://parano.github.io/Global-Terrorism-Visualization/) :arrow_left:
+![Screenshot](images/screenshot.png)
 
 ## Team Members
 
