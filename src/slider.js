@@ -1,11 +1,16 @@
 // Slider area
-var slider = (function(){
+var slider_generator = function(){
   // svg attributes
-  var margin = {top:0, right:20, bottom: 30, left: 20},
-      canvas_width = +(d3.select('#slider').style('width').replace('px', '')),
-      w = canvas_width - margin.left - margin.right,
-      h = 70,
+  var margin = {top:0, right:15, bottom: 20, left: 15},
+      canvas_width,
+      w,
+      h = 60,
       barPadding = 1;
+
+  var initCanvasSize = function(){
+      canvas_width = +(d3.select('#slider').style('width').replace('px', ''));
+      w = canvas_width - margin.left - margin.right;
+  }
 
   // Parsing data from sumTable.csv
   // csv format example: 
@@ -23,7 +28,7 @@ var slider = (function(){
   var dataset = [];
   var draw = function(dataset) {
     // append svg
-    console.log("create svg");
+    //console.log("create svg");
     var svg = d3.select("#slider")
                 .append("svg")
                 .attr("width", w + margin.left + margin.right)
@@ -65,7 +70,7 @@ var slider = (function(){
 
     var brush = d3.svg.brush()
         .x(tScale)
-        .extent([new Date(2008, 1), new Date(2009, 1)])
+        .extent([new Date(2007, 12), new Date(2008, 12)])
         .on("brushend", function() {
           if (!d3.event.sourceEvent) return; // only transition after input
 
@@ -86,18 +91,20 @@ var slider = (function(){
             extent1[1] = d3.time.month.ceil(upper_time_limit);
           }
 
-          console.log(extent1);
+          //console.log(extent1);
 
           d3.select(this).transition()
             .call(brush.extent(extent1))
             .call(brush.event);
-          //d3.select(this).call(brush.extent(extent1));
+            //d3.select(this).call(brush.extent(extent1));
+
+          update_view(extent1);
         })
         .on("brush", function(){
           var extent0 = brush.extent(),
           extent1 = extent0.map(d3.time.month.round);
 
-           if (extent1[0] >= extent1[1]) {
+          if (extent1[0] >= extent1[1]) {
             extent1[0] = d3.time.month.floor(extent0[0]);
             extent1[1] = d3.time.month.ceil(extent0[1]);
           }
@@ -151,8 +158,10 @@ var slider = (function(){
       .attr("height", h);
   };
 
+  var current_month_range;
   var update_view = function(month_range) {
     //console.log(month_range);
+    current_month_range = month_range;
 
     // update the world map
     WORLDMAP.update(
@@ -165,6 +174,8 @@ var slider = (function(){
   };
 
   var init = function() {
+    initCanvasSize();
+
     // Read csv file
     d3.csv("data/sumTable.csv", function(data){
       dataset = data.map(function(d) {
@@ -177,8 +188,16 @@ var slider = (function(){
     });
   };
 
+  var redraw = function(){
+    d3.select("div#slider svg").remove();
+    initCanvasSize();
+    draw(dataset);
+    update_view(current_month_range);
+  };
+
   return {
     init: init,
+    redraw: redraw,
     dataset: function() { return dataset; }
   };
-})();
+};

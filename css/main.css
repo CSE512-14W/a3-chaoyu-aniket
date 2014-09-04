@@ -3,23 +3,38 @@ body {
   padding: 0;
   background: #f1f1f1;
 }
+
 a{
+  text-decoration: none;
 	color: #000;
+  background: 0 0;
+  cursor: auto;
 }
+
+a:hover, a:focus {
+  color: #2a6496;
+  text-decoration: underline;
+}
+
 .container {
   background: #ddd;
+  width: 70%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 #totalKill {
-  padding: 23px 0 20px 0;
-  font: 26px 'Titillium Web', arial, sans-serif;
+  padding: 10px 0 14px 0;
+  font: 23px 'Titillium Web', arial, sans-serif;
   background: #fafafa;
   color: #5E545D;
   text-align: center;
 }
 
 #totalKill b {
-  font-size: 35px;
+  font-size: 26px;
 }
 
 #slider, #heatmap {
@@ -32,10 +47,16 @@ a{
 
 #map {
   position: relative; 
-  width: 100%; 
-  padding-bottom: 40%;
+  width: 80%; 
+  padding-bottom: 32%;
   height: 0;
-  overflow: hidden
+  overflow: hidden;
+  float: none;
+  margin: 0 auto;
+}
+
+#circlesmap {
+  padding-top: -10%;
 }
 
 .axis text {
@@ -77,11 +98,11 @@ div#country_list{
 }
 
 #cite {
-	font-size: 8px;
-	text-align:right;
+  font-size: 14px;
 }
 
 footer{
   margin: 20px auto 20px auto;
-  width: 200px;
+	font-size: 10px;
+	text-align: center;
 }
