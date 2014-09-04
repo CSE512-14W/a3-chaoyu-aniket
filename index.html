@@ -1,19 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Assignment 3</title>
+    <title>Global Terrorism Visualization</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/ui-lightness/jquery-ui.min.css">
     <link href="css/main.css" rel="stylesheet">
-
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="http://d3js.org/queue.v1.min.js"></script>
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
-    <script src="libs/datamaps.world.min.js"></script>
   </head>
 
   <body>
@@ -27,20 +18,25 @@
     </div>
     <div class="container">
       <div id="circlesmap"></div>
-      <div id="cite">*According to dataset from <a href="http://www.start.umd.edu/gtd/">Global Terrorism Database</a></div>
     </div>
     
     <footer>
-    <a href="http://cyy.io">Chaoyu</a> + <a href="http://atneik.com">Atneik</a>
+      <a href="https://github.com/parano/Global-Terrorism-Visualization">Project hosted on Github</a> 
+      <div id="cite"><b>*</b>Data source: <a href="http://www.start.umd.edu/gtd/">Global Terrorism Database</a></div>
     </footer>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="libs/d3.v3.min.js"></script>
+    <script src="libs/topojson.v1.min.js"></script>
+    <script src="libs/datamaps.world.min.js"></script>
     <script src="libs/underscore-min.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
     <script src="data/country_name_mapping.js"></script>
     <script src="src/worldmap.js"></script>
     <script src="src/slider.js"></script>
     <script src="src/circlesmap.js"></script>
     <script src="src/main.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    
+    <a href="https://github.com/parano/Global-Terrorism-Visualization"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
   </body>
 </html>

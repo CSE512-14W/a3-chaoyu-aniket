@@ -1,8 +1,12 @@
 var WORLDMAP = {
-
   data: {},
   world_data: {},
-  
+
+  get3LetterMonth: function(month) {
+    var name = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC' ];
+    return name[month-1];
+  },
+
   update: function (f_year, f_month, t_year, t_month) {
     this.world_data = {};
 
@@ -15,61 +19,47 @@ var WORLDMAP = {
     //console.log(data);
 
     for(var i=0; i < data.length; i++){
+      var flag = true;
       
-      var flag = new Boolean();
-      flag = true;
-      
-      if(parseInt(data[i].year) < f_year){
+      if(data[i].year < f_year){
           flag = false;
-      }
-      else if(parseInt(data[i].year) == f_year){
-        if(parseInt(data[i].month) < f_month)
+      } else if(data[i].year == f_year){
+        if(data[i].month < f_month)
           flag = false;
       };
       
-      if(parseInt(data[i].year) > t_year){
+      if(data[i].year > t_year){
         flag = false;
-      }else if(parseInt(data[i].year) == t_year){
-        if(parseInt(data[i].month) > t_month - 1)
+      } else if(data[i].year == t_year){
+        if(data[i].month > t_month - 1)
           flag = false;
       };
      
       if(flag){
-        totalKilled += parseInt(data[i].nkill);
+        totalKilled += data[i].nkill;
         if(this.world_data[data[i].country] == null){
-          this.world_data[data[i].country] = parseInt(data[i].nkill)
+          this.world_data[data[i].country] = data[i].nkill
         }
         else{
-          this.world_data[data[i].country] = parseInt(data[i].nkill) + this.world_data[data[i].country];
+          this.world_data[data[i].country] = data[i].nkill + this.world_data[data[i].country];
         };  
       };
     };
-   
+
     totalKilled = totalKilled.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    var get3LetterMonth = function(month) {
-      
-      var name = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC' ];
-      return name[month-1];
-    }
-
+   
     var html = '<b>' + totalKilled + '</b> people were killed due to Terrorism between '
-                  + get3LetterMonth(f_month)+', ' + f_year + " and "+ get3LetterMonth(t_month)+', '+ t_year+'.';
+                  + this.get3LetterMonth(f_month)+', ' + f_year + " and "+ this.get3LetterMonth(t_month)+', '+ t_year+'.';
     //console.log(html);
 
     document.getElementById('totalKill').innerHTML = html;
     //console.log(this.world_data);
 
-    // create the color scale on the world map
-    var colorScale = d3.scale.log()
-                        .clamp(true)
-                        .domain([1, 3000])
-                        .range([0, 8])
-                        .nice();
 
     for (var country in this.world_data) {
       var obj = {}
-      obj['fillKey'] = Math.ceil(colorScale(this.world_data[country]));
+      obj['fillKey'] = Math.ceil(this.colorScale(this.world_data[country]));
       obj['nkill'] = this.world_data[country];
       this.world_data[country] = obj;
     }
@@ -110,30 +100,38 @@ var WORLDMAP = {
       }
     });
   }, // end of update function
-
   
+  currentMap: null,
+  colorScale: null,
   countries :[],
   //country_names: [],
   init: function () {
-    var countries=[];
+    var countries=["IRQ", "PAK", "CHN", "IND"];
     var that = this;
-    
-    svg = d3.select("div#map"); 
-    svg.on("click", function() {
+
+    // create the color scale on the world map
+    this.colorScale = d3.scale.log()
+                        .clamp(true)
+                        .domain([1, 3000])
+                        .range([0, 8])
+                        .nice();
+
+    var render = function() {
       var event;
       event = d3.mouse(this);
       total = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0].length;
+
       var clickedCountry = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("class").split(" ")[1];
-      var clickedCountryColor = d3.selectAll("div#map svg.datamap g.datamaps-subunits path")[0][total-1].getAttribute("style").split(" ")[1];
-      
-      if(clickedCountryColor=='#333333;'){
-        if(countries.indexOf(clickedCountry) == -1) {
-          countries.push(clickedCountry);
-        } else {
-          countries.splice(countries.indexOf(clickedCountry), 1);
-        }
+
+      //console.log(typeof clickedCountryColor);
+
+      if(countries.indexOf(clickedCountry) == -1) {
+        countries.push(clickedCountry);
+      } else {
+        countries.splice(countries.indexOf(clickedCountry), 1);
       }
-      console.log(countries);
+
+      //console.log(countries);
       that.countries = countries;
       // update circlesmap when clicked countries changes
       circlesmap.update();
@@ -143,12 +141,22 @@ var WORLDMAP = {
       //  html += '<p>' + countries[country] + '</p>';
       //}
       //document.getElementById('country_list').innerHTML = html;
-    });
+    }
+    
+    svg = d3.select("div#map"); 
+    svg.on("click", render);
+    that.countries = countries;
 
     d3.json("data/gtd.json", function(error, data) {
       if (error) return console.warn(error);
       this.data = data;
-      that.data = data;
+
+      for(var i=0; i<data.length; i++) {
+        data[i].year = parseInt(data[i].year);
+        data[i].month = parseInt(data[i].month);
+        data[i].nkill = parseInt(data[i].nkill);
+      }
+
       slider.init();
       circlesmap.init();
     }); 
